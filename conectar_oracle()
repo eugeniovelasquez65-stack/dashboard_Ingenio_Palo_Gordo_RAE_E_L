@@ -1,0 +1,22 @@
+def conectar_oracle():
+    oracle_path = r"C:\Users\eulopez\Documents\EUGENIO_LÓPEZ\CONTROLES IPG_REA.E.L\CLIENTE_PROPIO\instantclient-basic-windows.x64-21.20.0.0.0dbru\instantclient_21_20"
+    
+    os.environ["PATH"] = oracle_path + ";" + os.environ.get("PATH", "")
+    
+    # FORZAR THICK MODE ANTES DE TODO
+    if oracledb.is_thin_mode():
+        try:
+            oracledb.init_oracle_client(lib_dir=oracle_path)
+            print(f"Thick mode: {not oracledb.is_thin_mode()}")
+        except Exception as e:
+            print(f"Error init: {e}")
+            return None
+    
+    try:
+        dsn = oracledb.makedsn(ORACLE_HOST, ORACLE_PORT, sid=ORACLE_SID)
+        connection = oracledb.connect(user=ORACLE_USER, password=ORACLE_PASSWORD, dsn=dsn)
+        print("Conexion OK")
+        return connection
+    except Exception as e:
+        print(f"Error: {e}")
+        return None

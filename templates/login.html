@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPG · Acceso al Sistema</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde-corp:   #2d5f4f;
+            --verde-medio:  #3a7a65;
+            --verde-claro:  #4a9574;
+            --gris-oscuro:  #1a2f2a;
+            --gris-panel:   #2c3e50;
+            --gris-medio:   #34495e;
+            --dorado:       #f1c40f;
+            --azul-acento:  #5dade2;
+            --texto-claro:  #ecf0f1;
+            --texto-blanco: #ffffff;
+            --error:        #e74c3c;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            min-height: 100vh;
+            background: #0e1e1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ── FONDO ── */
+        .bg-canvas {
+            position: fixed; inset: 0; z-index: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, #1a3d30 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 20%, #1c3545 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 80%, rgba(45,95,79,0.13) 0%, transparent 50%),
+                linear-gradient(135deg, #0e1e1a 0%, #1a2f2a 50%, #0e1e1a 100%);
+        }
+        .bg-grid {
+            position: fixed; inset: 0; z-index: 0;
+            background-image:
+                linear-gradient(rgba(74,149,116,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(74,149,116,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+        .orb {
+            position: fixed; border-radius: 50%;
+            filter: blur(80px); z-index: 0;
+            animation: drift 18s ease-in-out infinite;
+        }
+        .orb-1 { width:480px; height:480px; background:#2d5f4f; opacity:0.18; top:-120px; left:-120px; animation-delay:0s; }
+        .orb-2 { width:320px; height:320px; background:#1c3545; opacity:0.18; bottom:-80px; right:-80px; animation-delay:-6s; }
+        .orb-3 { width:200px; height:200px; background:#f1c40f; opacity:0.05; top:40%; right:20%; animation-delay:-12s; }
+
+        @keyframes drift {
+            0%,100% { transform:translate(0,0) scale(1); }
+            33%      { transform:translate(20px,-30px) scale(1.05); }
+            66%      { transform:translate(-15px,20px) scale(0.97); }
+        }
+
+        /* ── TARJETA ── */
+        .login-wrapper {
+            position: relative; z-index: 10;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: min(900px, 95vw);
+            min-height: 540px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow:
+                0 40px 80px rgba(0,0,0,0.65),
+                0 0 0 1px rgba(74,149,116,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.06);
+            animation: cardIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
+        }
+        @keyframes cardIn {
+            from { opacity:0; transform:translateY(32px) scale(0.97); }
+            to   { opacity:1; transform:translateY(0) scale(1); }
+        }
+
+        /* ── PANEL IZQUIERDO ── */
+        .panel-brand {
+            background: linear-gradient(160deg, #2d5f4f 0%, #1a3d30 60%, #0e2318 100%);
+            padding: 52px 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            border-right: 1px solid rgba(74,149,116,0.25);
+        }
+        .panel-brand::before {
+            content:''; position:absolute;
+            top:-60px; right:-60px;
+            width:260px; height:260px;
+            border-radius:50%;
+            border:1.5px solid rgba(241,196,15,0.1);
+        }
+        .panel-brand::after {
+            content:''; position:absolute;
+            bottom:-40px; left:-40px;
+            width:180px; height:180px;
+            border-radius:50%;
+            border:1px solid rgba(74,149,116,0.12);
+        }
+        .brand-top { position:relative; z-index:2; }
+        .brand-icon {
+            width:52px; height:52px;
+            background:linear-gradient(135deg, var(--dorado), #e6a817);
+            border-radius:14px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.5rem;
+            box-shadow:0 8px 24px rgba(241,196,15,0.3);
+            margin-bottom:28px;
+            animation:iconPulse 3s ease-in-out infinite;
+        }
+        @keyframes iconPulse {
+            0%,100% { box-shadow:0 8px 24px rgba(241,196,15,0.3); }
+            50%      { box-shadow:0 8px 36px rgba(241,196,15,0.55); }
+        }
+        .brand-name {
+            font-family:'Playfair Display',serif;
+            font-size:1.9rem; font-weight:700;
+            color:var(--texto-blanco);
+            line-height:1.2; letter-spacing:-0.5px; margin-bottom:8px;
+        }
+        .brand-name span { color:var(--dorado); }
+        .brand-sub {
+            font-size:0.7rem; font-weight:400;
+            color:rgba(255,255,255,0.4);
+            letter-spacing:2.5px; text-transform:uppercase; margin-bottom:28px;
+        }
+        .brand-divider {
+            width:40px; height:2px;
+            background:linear-gradient(90deg, var(--dorado), transparent);
+            margin-bottom:20px;
+        }
+        .brand-desc {
+            font-size:0.8rem; color:rgba(255,255,255,0.45);
+            line-height:1.8; font-weight:300;
+        }
+        .brand-stats { position:relative; z-index:2; display:flex; flex-direction:column; gap:13px; }
+        .stat-item {
+            display:flex; align-items:center; gap:12px;
+            opacity:0; animation:statIn 0.5s ease both;
+        }
+        .stat-item:nth-child(1){ animation-delay:0.55s }
+        .stat-item:nth-child(2){ animation-delay:0.70s }
+        .stat-item:nth-child(3){ animation-delay:0.85s }
+        @keyframes statIn {
+            from{opacity:0;transform:translateX(-12px)}
+            to{opacity:1;transform:translateX(0)}
+        }
+        .stat-dot {
+            width:7px; height:7px; border-radius:50%; flex-shrink:0;
+            background:var(--verde-claro); box-shadow:0 0 7px var(--verde-claro);
+        }
+        .stat-dot.gold { background:var(--dorado);      box-shadow:0 0 7px var(--dorado); }
+        .stat-dot.blue { background:var(--azul-acento); box-shadow:0 0 7px var(--azul-acento); }
+        .stat-text { font-size:0.71rem; color:rgba(255,255,255,0.38); letter-spacing:0.3px; }
+
+        /* ── PANEL DERECHO ── */
+        .panel-form {
+            background:linear-gradient(160deg, #2c3e50 0%, #243342 100%);
+            padding:52px 44px;
+            display:flex; flex-direction:column; justify-content:center;
+            position:relative;
+        }
+        .form-header {
+            margin-bottom:34px;
+            opacity:0; animation:fadeUp 0.5s ease 0.3s both;
+        }
+        @keyframes fadeUp {
+            from{opacity:0;transform:translateY(16px)}
+            to{opacity:1;transform:translateY(0)}
+        }
+        .form-titulo {
+            font-family:'Playfair Display',serif;
+            font-size:1.55rem; font-weight:600;
+            color:var(--texto-blanco); letter-spacing:-0.3px; margin-bottom:6px;
+        }
+        .form-subtitulo {
+            font-size:0.76rem; color:rgba(255,255,255,0.35);
+            font-weight:300; letter-spacing:0.4px;
+        }
+
+        /* Error */
+        .alert-error {
+            background:rgba(231,76,60,0.1);
+            border:1px solid rgba(231,76,60,0.3);
+            border-left:3px solid var(--error);
+            border-radius:8px;
+            padding:10px 14px;
+            font-size:0.77rem; color:#ff8a80;
+            margin-bottom:20px;
+            display:flex; align-items:center; gap:8px;
+            animation:fadeUp 0.3s ease both;
+        }
+
+        /* Campos */
+        .field-group {
+            margin-bottom:18px;
+            opacity:0; animation:fadeUp 0.5s ease both;
+        }
+        .field-group:nth-child(1){ animation-delay:0.42s }
+        .field-group:nth-child(2){ animation-delay:0.54s }
+
+        .field-label {
+            display:block;
+            font-size:0.68rem; font-weight:600;
+            letter-spacing:1.5px; text-transform:uppercase;
+            color:rgba(255,255,255,0.4); margin-bottom:8px;
+        }
+        .field-wrap { position:relative; }
+        .field-icon {
+            position:absolute; left:14px; top:50%;
+            transform:translateY(-50%);
+            font-size:0.88rem; opacity:0.35; pointer-events:none;
+            transition:opacity 0.2s;
+        }
+        .field-input {
+            width:100%;
+            background:rgba(255,255,255,0.05);
+            border:1px solid rgba(255,255,255,0.1);
+            border-radius:10px;
+            padding:13px 14px 13px 40px;
+            font-family:'IBM Plex Sans',sans-serif;
+            font-size:0.88rem; color:var(--texto-claro);
+            outline:none; transition:all 0.25s;
+        }
+        .field-input::placeholder { color:rgba(255,255,255,0.18); }
+        .field-input:focus {
+            background:rgba(74,149,116,0.08);
+            border-color:var(--verde-claro);
+            box-shadow:0 0 0 3px rgba(74,149,116,0.12), 0 4px 16px rgba(0,0,0,0.2);
+        }
+        .field-wrap:focus-within .field-icon { opacity:0.7; }
+        .field-input:-webkit-autofill,
+        .field-input:-webkit-autofill:focus {
+            -webkit-box-shadow:0 0 0 1000px #2a3a4a inset;
+            -webkit-text-fill-color:var(--texto-claro);
+            caret-color:var(--texto-claro);
+        }
+
+        /* Botón */
+        .btn-login {
+            width:100%; padding:14px; border:none; border-radius:10px;
+            background:linear-gradient(135deg, var(--verde-medio) 0%, var(--verde-claro) 100%);
+            color:var(--texto-blanco);
+            font-family:'IBM Plex Sans',sans-serif;
+            font-size:0.85rem; font-weight:600;
+            letter-spacing:1.2px; text-transform:uppercase;
+            cursor:pointer; transition:all 0.25s;
+            position:relative; overflow:hidden;
+            box-shadow:0 6px 20px rgba(58,122,101,0.35);
+            margin-top:10px;
+            opacity:0; animation:fadeUp 0.5s ease 0.66s both;
+        }
+        .btn-login::before {
+            content:''; position:absolute; inset:0;
+            background:linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+            opacity:0; transition:opacity 0.25s;
+        }
+        .btn-login:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(58,122,101,0.5); }
+        .btn-login:hover::before { opacity:1; }
+        .btn-login:active { transform:translateY(0); }
+        .btn-login.loading { pointer-events:none; opacity:0.75; }
+        .btn-login.loading::after {
+            content:''; position:absolute; inset:0;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);
+            animation:shimmer 1.1s infinite;
+        }
+        @keyframes shimmer {
+            from{transform:translateX(-100%)}
+            to{transform:translateX(100%)}
+        }
+
+        /* Footer */
+        .form-footer {
+            margin-top:26px; padding-top:18px;
+            border-top:1px solid rgba(255,255,255,0.07);
+            display:flex; align-items:center; gap:10px;
+            opacity:0; animation:fadeUp 0.5s ease 0.76s both;
+        }
+        .footer-lock {
+            width:28px; height:28px;
+            background:rgba(74,149,116,0.1);
+            border:1px solid rgba(74,149,116,0.2);
+            border-radius:7px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.74rem; flex-shrink:0;
+        }
+        .footer-text { font-size:0.67rem; color:rgba(255,255,255,0.23); line-height:1.5; }
+        .footer-text strong { color:rgba(255,255,255,0.38); font-weight:500; }
+
+        @media(max-width:640px){
+            .login-wrapper{ grid-template-columns:1fr; }
+            .panel-brand{ display:none; }
+            .panel-form{ padding:40px 28px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-canvas"></div>
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="login-wrapper">
+
+    <!-- Panel izquierdo: Branding -->
+    <div class="panel-brand">
+        <div class="brand-top">
+            <div class="brand-icon">🏭</div>
+            <div class="brand-name">Ingenio<br><span>Palo Gordo</span></div>
+            <div class="brand-sub">Sistema de Presupuestos</div>
+            <div class="brand-divider"></div>
+            <div class="brand-desc">
+                Plataforma ejecutiva de control<br>
+                y análisis financiero.<br>
+                Departamento de Presupuestos IPG.
+            </div>
+        </div>
+        <div class="brand-stats">
+            <div class="stat-item">
+                <div class="stat-dot"></div>
+                <div class="stat-text">Monitoreo en tiempo real</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-dot gold"></div>
+                <div class="stat-text">Control por centro de costo</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-dot blue"></div>
+                <div class="stat-text">Acceso restringido por usuario</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel derecho: Formulario -->
+    <div class="panel-form">
+        <div class="form-header">
+            <div class="form-titulo">Bienvenido</div>
+            <div class="form-subtitulo">Ingresa tus credenciales para continuar</div>
+        </div>
+
+        {% if error %}
+        <div class="alert-error">
+            <span>⚠</span>&nbsp;{{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('login') }}" id="loginForm">
+            <div class="field-group">
+                <label class="field-label" for="email">Correo Electrónico</label>
+                <div class="field-wrap">
+                    <input type="email" class="field-input" id="email" name="email"
+                           placeholder="tu.correo@ipg.com.gt" required>
+                    <span class="field-icon">✉</span>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="password">Contraseña</label>
+                <div class="field-wrap">
+                    <input type="password" class="field-input" id="password" name="password"
+                           placeholder="••••••••" required>
+                    <span class="field-icon">🔑</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="btnLogin">
+                Ingresar al sistema
+            </button>
+        </form>
+
+        <div class="form-footer">
+            <div class="footer-lock">🔒</div>
+            <div class="footer-text">
+                <strong>Acceso restringido.</strong> Solo personal autorizado
+                del Departamento de Presupuestos IPG.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(){
+        const btn = document.getElementById('btnLogin');
+        btn.classList.add('loading');
+        btn.textContent = 'Verificando...';
+    });
+</script>
+
+</body>
+</html>
