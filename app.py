@@ -34,37 +34,6 @@ def cargar_datos():
         return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
 
-def cargar_datos_erp():
-    """Carga el JSON datos_presupuesto_erp, soporta raíz como lista o dict con 'recordset'."""
-    try:
-        ruta = os.path.join(BASE_DIR, 'data', 'datos_presupuesto_erp.json')
-        with open(ruta, 'r', encoding='utf-8') as f:
-            raw = json.load(f)
-        if isinstance(raw, list):
-            registros = raw
-        elif isinstance(raw, dict):
-            # Buscar la primera clave que sea lista
-            registros = None
-            for v in raw.values():
-                if isinstance(v, list):
-                    registros = v
-                    break
-            if registros is None:
-                registros = []
-        else:
-            registros = []
-        df = pd.DataFrame(registros)
-        if not df.empty:
-            df.columns = df.columns.str.strip().str.upper()
-            # Eliminar columna USUARIO si existe
-            if 'USUARIO' in df.columns:
-                df = df.drop(columns=['USUARIO'])
-        return df
-    except Exception as e:
-        print(f"Error cargando datos ERP: {e}")
-        return pd.DataFrame()
-
-
 def cargar_usuarios_login():
     try:
         ruta = os.path.join(BASE_DIR, 'data', 'COMPLEMENTO_DIRECTLY_1.xlsx')
@@ -99,29 +68,6 @@ def obtener_datos_usuario(correo):
     df_datos['CENTRO_COSTO'] = df_datos['CENTRO_COSTO'].astype(str).str.strip()
     df_filtrado = df_datos[df_datos['CENTRO_COSTO'].isin(ccus_permitidos)]
     return df_filtrado, nombre_completo
-
-
-def obtener_datos_erp_usuario(correo):
-    """Retorna los datos ERP filtrados por los CCUs permitidos del usuario."""
-    _, df_accesos, df_usuarios = cargar_datos()
-    df_erp = cargar_datos_erp()
-    if df_erp.empty or df_accesos.empty or df_usuarios.empty:
-        return pd.DataFrame()
-    df_usuarios['USUARIO'] = df_usuarios['USUARIO'].astype(str).str.strip().str.lower()
-    correo_lower = correo.strip().lower()
-    fila_usuario = df_usuarios[df_usuarios['USUARIO'] == correo_lower]
-    if fila_usuario.empty:
-        return pd.DataFrame()
-    usuario_sistema = str(fila_usuario.iloc[0]['USUARIO_NOMBRE']).strip().lower()
-    df_accesos['USUARIO'] = df_accesos['USUARIO'].astype(str).str.strip().str.lower()
-    accesos_usuario = df_accesos[df_accesos['USUARIO'] == usuario_sistema]
-    if accesos_usuario.empty:
-        return pd.DataFrame()
-    ccus_permitidos = accesos_usuario['CCU'].astype(str).str.strip().tolist()
-    if 'CENTRO_COSTO' in df_erp.columns:
-        df_erp['CENTRO_COSTO'] = df_erp['CENTRO_COSTO'].astype(str).str.strip()
-        return df_erp[df_erp['CENTRO_COSTO'].isin(ccus_permitidos)]
-    return df_erp
 
 
 def calcular_chequeras_por_mes(df):
@@ -229,7 +175,7 @@ def calcular_resumen(df):
                     datos_meses[MESES_ORDEN[idx]] = {'creditos':round(float(row['CREDITOS']),2),'debitos':round(float(row['DEBITOS']),2)}
             except:
                 pass
-    columnas_tabla = ['DES_RESPONSABLE','TIPO_TR','NOMBRE_CHEQUERA','FECHA_OPER','NO_DOCU','OBSERVACIONES','CREDITOS','DEBITOS','MONTO']
+    columnas_tabla = ['DES_RESPONSABLE','TIPO_TR','NOMBRE_CHEQUERA','FECHA_DOCU','NO_DOCU','OBSERVACIONES','CREDITOS','DEBITOS','MONTO']
     cols_exist = [c for c in columnas_tabla if c in df.columns]
     tabla_html = _build_table_html(df[cols_exist].head(1000).copy())
     return kpis, datos_meses, tabla_html
@@ -287,27 +233,6 @@ def obtener_segmentadores(df):
         'cod_responsables':     uniq('GERENCIA'),
         'cod_centros':          uniq('RESPONSABLE'),
     }
-
-
-def aplicar_filtros_df(df, filtros):
-    """Aplica los filtros del dashboard a cualquier DataFrame que tenga las mismas columnas."""
-    df = df.copy()
-    df.columns = df.columns.str.strip().str.upper()
-    mapa = {
-        'administracion':  'DES_ADMINSTRACION',
-        'gerencia':        'DES_GERENCIA',
-        'responsable':     'DES_RESPONSABLE',
-        'centro_costo':    'CENTRO_COSTO',
-        'chequera':        'NOMBRE_CHEQUERA',
-        'cod_responsable': 'GERENCIA',
-        'cod_admin':       'ADMINISTRACION',
-        'cod_centro':      'RESPONSABLE',
-    }
-    for key, col in mapa.items():
-        valores = filtros.get(key, [])
-        if valores and col in df.columns:
-            df = df[df[col].astype(str).str.strip().isin(valores)]
-    return df
 
 
 @app.route('/')
@@ -377,44 +302,42 @@ def api_filtrar():
     if 'usuario' not in session:
         return jsonify({'error': 'no autenticado'}), 401
     filtros = request.get_json()
+    df, _   = obtener_datos_usuario(session['usuario'])
+    if df.empty:
+        return jsonify({'kpis':{'total_creditos':'Q0.00','total_debitos':'Q0.00','saldo_neto':'Q0.00'},
+                        'datos_meses':{m:{'creditos':0,'debitos':0} for m in MESES_ORDEN},
+                        'datos_chequeras_mes':{m:{} for m in MESES_ORDEN},
+                        'datos_resumen':[],'tabla_html':''})
+    df = df.copy()
+    df.columns = df.columns.str.strip().str.upper()
+    mapa = {'administracion':'DES_ADMINSTRACION','gerencia':'DES_GERENCIA','responsable':'DES_RESPONSABLE',
+            'centro_costo':'CENTRO_COSTO','chequera':'NOMBRE_CHEQUERA',
+            'cod_responsable':'GERENCIA','cod_admin':'ADMINISTRACION','cod_centro':'RESPONSABLE'}
+    for key, col in mapa.items():
+        valores = filtros.get(key, [])
+        if valores and col in df.columns:
+            df = df[df[col].astype(str).str.strip().isin(valores)]
+    kpis, datos_meses, tabla_html = calcular_resumen(df)
+    return jsonify({'kpis':kpis,'datos_meses':datos_meses,
+                    'datos_chequeras_mes':calcular_chequeras_por_mes(df),
+                    'datos_resumen':calcular_resumen_saldos(df),'tabla_html':tabla_html})
+
+
+@app.route('/exportar-excel')
+def exportar_excel():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
     df, _ = obtener_datos_usuario(session['usuario'])
     if df.empty:
-        return jsonify({
-            'kpis': {'total_creditos':'Q0.00','total_debitos':'Q0.00','saldo_neto':'Q0.00'},
-            'datos_meses': {m:{'creditos':0,'debitos':0} for m in MESES_ORDEN},
-            'datos_chequeras_mes': {m:{} for m in MESES_ORDEN},
-            'datos_resumen': [],
-            'tabla_html': ''
-        })
-
-    df = aplicar_filtros_df(df, filtros)
-
-    kpis, datos_meses, tabla_html = calcular_resumen(df)
-    return jsonify({
-        'kpis':               kpis,
-        'datos_meses':        datos_meses,
-        'datos_chequeras_mes': calcular_chequeras_por_mes(df),
-        'datos_resumen':      calcular_resumen_saldos(df),
-        'tabla_html':         tabla_html
-    })
-
-
-@app.route('/api/exportar-datos', methods=['POST'])
-def api_exportar_datos():
-    """Retorna los datos ERP filtrados en formato JSON para que el frontend genere el Excel."""
-    if 'usuario' not in session:
-        return jsonify({'error': 'no autenticado'}), 401
-    filtros = request.get_json() or {}
-    df_erp = obtener_datos_erp_usuario(session['usuario'])
-    if not df_erp.empty and filtros:
-        df_erp = aplicar_filtros_df(df_erp, filtros)
-    if df_erp.empty:
-        return jsonify({'columnas': [], 'filas': []})
-    # Convertir NaN a None para JSON limpio
-    df_erp = df_erp.where(pd.notnull(df_erp), None)
-    columnas = df_erp.columns.tolist()
-    filas = df_erp.values.tolist()
-    return jsonify({'columnas': columnas, 'filas': filas})
+        return "No hay datos para exportar", 404
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, sheet_name='Datos', index=False)
+    output.seek(0)
+    return send_file(output,
+        download_name=f'reporte_{datetime.now().strftime("%Y%m%d_%H%M")}.xlsx',
+        as_attachment=True,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
 
 @app.route('/logout')
