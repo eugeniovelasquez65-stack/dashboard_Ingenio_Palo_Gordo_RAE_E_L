@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: dashboard_Ingenio_Palo_Gordo_RAE_E_Ldashboard_Ingenio_Palo_Gordo_RAE_E_L
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app

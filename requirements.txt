@@ -1,0 +1,9 @@
+flask==3.1.2
+flask-login==0.6.3
+pandas==3.0.0
+openpyxl==3.1.5
+plotly==6.5.2
+numpy==2.4.2
+requests==2.32.5
+ijson==3.4.0.post0
+gunicorn
