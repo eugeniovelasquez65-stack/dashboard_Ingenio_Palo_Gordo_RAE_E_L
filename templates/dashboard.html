@@ -30,8 +30,6 @@
     min-height:100vh;
     color:var(--texto-claro);
   }
-
-  /* HEADER */
   .header {
     background:linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     border-bottom:3px solid var(--verde-claro);
@@ -56,15 +54,8 @@
     cursor:pointer; font-size:0.82rem; font-weight:500;
     transition:all 0.2s; text-decoration:none;
   }
-  .btn-logout:hover {
-    background:var(--verde-claro); color:var(--gris-oscuro);
-    box-shadow:0 0 12px rgba(74,149,116,0.4);
-  }
-
-  /* TABS */
-  .tabs {
-    display:flex; background:#1c2833; border-bottom:2px solid #3a7a65; padding:0 24px;
-  }
+  .btn-logout:hover { background:var(--verde-claro); color:var(--gris-oscuro); box-shadow:0 0 12px rgba(74,149,116,0.4); }
+  .tabs { display:flex; background:#1c2833; border-bottom:2px solid #3a7a65; padding:0 24px; }
   .tab {
     padding:11px 22px; cursor:pointer; font-family:'Inter',sans-serif;
     font-size:0.85rem; font-weight:500; letter-spacing:0.5px; color:#7f8c8d;
@@ -72,43 +63,12 @@
   }
   .tab.active { color:var(--dorado); border-bottom-color:var(--dorado); }
   .tab:hover:not(.active) { color:var(--texto-claro); }
-
-  /* PAGES */
   .page { display:none; padding:16px 24px; }
   .page.active { display:block; animation:fadeIn 0.3s ease; }
-
-  /* ─── LAYOUT DASHBOARD: panel izquierdo (filtros 2col×4fil) + panel derecho ─── */
-  .dashboard-layout {
-    display: grid;
-    grid-template-columns: 500px 1fr;
-    gap: 14px;
-    align-items: start;
-  }
-
-  /* Panel izquierdo: filtros + botón excel */
-  .filters-panel-left {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: sticky;
-    top: 0;
-  }
-
-  /* Panel derecho: KPIs + cilindros */
-  .right-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 13px;
-    min-width: 0;
-  }
-
-  /* Sección de filtros: 2 columnas × 4 filas */
-  .filters-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
+  .dashboard-layout { display:grid; grid-template-columns:500px 1fr; gap:14px; align-items:start; }
+  .filters-panel-left { display:flex; flex-direction:column; gap:10px; position:sticky; top:0; }
+  .right-panel { display:flex; flex-direction:column; gap:13px; min-width:0; }
+  .filters-section { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .btn-excel {
     background:linear-gradient(135deg, #34495e, #2c3e50);
     border:1.5px solid var(--verde-claro); color:var(--texto-claro);
@@ -116,11 +76,8 @@
     display:flex; align-items:center; gap:8px; justify-content:center;
     transition:all 0.2s; text-decoration:none; width:auto;
   }
-  .btn-excel:hover {
-    background:linear-gradient(135deg, #3a7a65, #2d5f4f);
-    box-shadow:0 0 16px rgba(74,149,116,0.35);
-  }
-
+  .btn-excel:hover { background:linear-gradient(135deg, #3a7a65, #2d5f4f); box-shadow:0 0 16px rgba(74,149,116,0.35); }
+  .btn-excel:disabled { opacity:0.6; cursor:not-allowed; }
   .filter-group {
     background:linear-gradient(135deg, #2c3e50, #34495e);
     border:1px solid #546e7a; border-radius:8px; overflow:hidden;
@@ -129,35 +86,16 @@
   .filter-title {
     background:linear-gradient(90deg, #3a7a65, #4a9574); padding:6px 11px;
     font-family:'Inter',sans-serif; font-size:0.7rem; font-weight:600;
-    letter-spacing:1.2px; color:var(--texto-blanco); text-transform:uppercase;
-    text-align:center;
+    letter-spacing:1.2px; color:var(--texto-blanco); text-transform:uppercase; text-align:center;
   }
-  /* Exactamente 4 líneas visibles por segmentador */
-  .filter-list {
-    padding:5px 7px;
-    /* 4 items * altura item (~26px) = 104px */
-    max-height: 156px;
-    overflow-y:auto;
-    scrollbar-width:thin; scrollbar-color:#4a9574 #2c3e50;
-  }
+  .filter-list { padding:5px 7px; max-height:156px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:#4a9574 #2c3e50; }
   .filter-list::-webkit-scrollbar { width:5px; }
   .filter-list::-webkit-scrollbar-track { background:#2c3e50; }
   .filter-list::-webkit-scrollbar-thumb { background:#4a9574; border-radius:3px; }
-  .filter-item {
-    display:flex; align-items:center; gap:7px; padding:3px 5px;
-    cursor:pointer; border-radius:4px; transition:background 0.15s;
-    min-height: 26px;
-  }
+  .filter-item { display:flex; align-items:center; gap:7px; padding:3px 5px; cursor:pointer; border-radius:4px; transition:background 0.15s; min-height:26px; }
   .filter-item:hover { background:rgba(74,149,116,0.18); }
-  .filter-item input[type="checkbox"] {
-    accent-color:var(--verde-claro); width:13px; height:13px; cursor:pointer; flex-shrink:0;
-  }
-  .filter-item label {
-    font-size:0.72rem; color:var(--texto-claro); cursor:pointer;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
-
-  /* KPIs */
+  .filter-item input[type="checkbox"] { accent-color:var(--verde-claro); width:13px; height:13px; cursor:pointer; flex-shrink:0; }
+  .filter-item label { font-size:0.72rem; color:var(--texto-claro); cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .kpis-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:13px; margin-bottom:4px; }
   .kpi-card {
     border-radius:12px; padding:16px 22px; text-align:center;
@@ -166,44 +104,24 @@
   }
   .kpi-card::before {
     content:''; position:absolute; top:-60%; left:-60%; width:220%; height:220%;
-    background:radial-gradient(ellipse, rgba(255,255,255,0.08) 0%, transparent 65%);
-    pointer-events:none;
+    background:radial-gradient(ellipse, rgba(255,255,255,0.08) 0%, transparent 65%); pointer-events:none;
   }
   .kpi-card.creditos { background:linear-gradient(135deg, #27ae60, #2ecc71); border:2px solid rgba(46,204,113,0.4); }
   .kpi-card.debitos  { background:linear-gradient(135deg, #c0392b, #e74c3c); border:2px solid rgba(231,76,60,0.4); }
   .kpi-card.neto     { background:linear-gradient(135deg, #2980b9, #3498db); border:2px solid rgba(52,152,219,0.4); }
-  .kpi-label {
-    font-family:'Inter',sans-serif; font-size:0.74rem; font-weight:600;
-    letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.92); margin-bottom:7px;
-  }
-  .kpi-value {
-    font-family:'Inter',sans-serif; font-size:1.45rem; font-weight:700;
-    color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.4); word-break:break-all;
-  }
-
-  /* CILINDROS */
+  .kpi-label { font-family:'Inter',sans-serif; font-size:0.74rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.92); margin-bottom:7px; }
+  .kpi-value { font-family:'Inter',sans-serif; font-size:1.45rem; font-weight:700; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.4); word-break:break-all; }
   .cylinders-section { display:flex; flex-direction:column; gap:12px; }
   .cylinders-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
   .cylinder-card {
     background:linear-gradient(160deg, #2c3e50 0%, #34495e 100%);
     border:1px solid #546e7a; border-radius:10px; padding:8px 5px 12px;
-    box-shadow:0 4px 18px rgba(0,0,0,0.4);
-    position:relative; transition:all 0.2s; cursor:pointer;
+    box-shadow:0 4px 18px rgba(0,0,0,0.4); position:relative; transition:all 0.2s; cursor:pointer;
     display:flex; flex-direction:column; align-items:center;
   }
-  .cylinder-card:hover {
-    border-color:var(--dorado);
-    box-shadow:0 6px 26px rgba(241,196,15,0.3);
-    transform:translateY(-2px);
-  }
-  .cylinder-title {
-    font-family:'Inter',sans-serif; font-size:0.6rem; font-weight:600;
-    letter-spacing:1.5px; color:var(--dorado); text-align:center;
-    text-transform:uppercase; margin-bottom:5px;
-  }
+  .cylinder-card:hover { border-color:var(--dorado); box-shadow:0 6px 26px rgba(241,196,15,0.3); transform:translateY(-2px); }
+  .cylinder-title { font-family:'Inter',sans-serif; font-size:0.6rem; font-weight:600; letter-spacing:1.5px; color:var(--dorado); text-align:center; text-transform:uppercase; margin-bottom:5px; }
   .cyl-svg-wrap { width:100%; display:flex; justify-content:center; }
-
-  /* ─── TOOLTIP CON GRÁFICO DE BARRAS ─── */
   .bar-tooltip {
     display:none; position:fixed; z-index:9999;
     background:linear-gradient(160deg, #1c2833, #2c3e50);
@@ -212,82 +130,36 @@
     pointer-events:none; min-width:360px; max-width:480px;
   }
   .bar-tooltip.visible { display:block; animation:tooltipIn 0.15s ease; }
-  @keyframes tooltipIn {
-    from{opacity:0; transform:scale(0.92) translateY(4px)}
-    to{opacity:1; transform:scale(1) translateY(0)}
-  }
-  .tooltip-title {
-    font-family:'Inter',sans-serif; font-size:0.68rem; font-weight:700;
-    letter-spacing:1.5px; color:var(--dorado); text-align:center;
-    text-transform:uppercase; margin-bottom:10px;
-    border-bottom:1px solid rgba(241,196,15,0.3); padding-bottom:7px;
-  }
+  @keyframes tooltipIn { from{opacity:0;transform:scale(0.92) translateY(4px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .tooltip-title { font-family:'Inter',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; color:var(--dorado); text-align:center; text-transform:uppercase; margin-bottom:10px; border-bottom:1px solid rgba(241,196,15,0.3); padding-bottom:7px; }
   .bar-chart-container { width:100%; }
-  .bar-row {
-    display:flex; align-items:center; gap:7px; margin-bottom:6px;
-  }
-  .bar-label {
-    font-size:0.62rem; color:#95a5a6; min-width:105px; max-width:105px;
-    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:right;
-    flex-shrink:0;
-  }
-  .bar-track {
-    flex:1; background:rgba(255,255,255,0.07); border-radius:4px;
-    height:18px; position:relative; overflow:visible;
-  }
-  .bar-fill {
-    height:100%; border-radius:4px; min-width:3px;
-    display:flex; align-items:center; position:relative;
-    transition:width 0.3s ease;
-  }
+  .bar-row { display:flex; align-items:center; gap:7px; margin-bottom:6px; }
+  .bar-label { font-size:0.62rem; color:#95a5a6; min-width:105px; max-width:105px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:right; flex-shrink:0; }
+  .bar-track { flex:1; background:rgba(255,255,255,0.07); border-radius:4px; height:18px; position:relative; overflow:visible; }
+  .bar-fill { height:100%; border-radius:4px; min-width:3px; display:flex; align-items:center; position:relative; transition:width 0.3s ease; }
   .bar-fill.positivo { background:linear-gradient(90deg, #27ae60, #2ecc71); }
   .bar-fill.negativo { background:linear-gradient(90deg, #c0392b, #e74c3c); }
   .bar-fill.neutro   { background:linear-gradient(90deg, #2980b9, #3498db); }
-  .bar-value {
-    position:absolute; right:-5px; top:50%; transform:translate(100%,-50%);
-    font-size:0.6rem; font-weight:700; white-space:nowrap; padding-left:4px;
-  }
+  .bar-value { position:absolute; right:-5px; top:50%; transform:translate(100%,-50%); font-size:0.6rem; font-weight:700; white-space:nowrap; padding-left:4px; }
   .bar-fill.positivo .bar-value { color:#2ecc71; }
   .bar-fill.negativo .bar-value { color:#e74c3c; }
   .bar-fill.neutro   .bar-value { color:#5dade2; }
-  .no-data-msg {
-    color:#95a5a6; text-align:center; padding:16px 6px;
-    font-size:0.72rem; letter-spacing:1px;
-  }
-
-  /* RESUMEN DE SALDOS */
+  .no-data-msg { color:#95a5a6; text-align:center; padding:16px 6px; font-size:0.72rem; letter-spacing:1px; }
   .resumen-container {
-    background:linear-gradient(135deg, #2c3e50, #34495e);
-    border:1px solid #546e7a; border-radius:10px;
-    box-shadow:0 4px 20px rgba(0,0,0,0.4);
-    display:flex; flex-direction:column;
-    height: calc(100vh - 130px); /* ajuste total viewport */
-    overflow: hidden;
+    background:linear-gradient(135deg, #2c3e50, #34495e); border:1px solid #546e7a; border-radius:10px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.4); display:flex; flex-direction:column;
+    height:calc(100vh - 130px); overflow:hidden;
   }
-  .resumen-header-bar {
-    padding: 14px 18px 10px;
-    border-bottom:2px solid rgba(74,149,116,0.3);
-    flex-shrink: 0;
-  }
-  .resumen-title {
-    font-family:'Inter',sans-serif; font-size:1.1rem; font-weight:700;
-    letter-spacing:1px; color:var(--dorado); text-transform:uppercase;
-  }
-  .resumen-scroll-area {
-    flex:1; overflow-y:auto; overflow-x:auto;
-  }
-  .resumen-table {
-    width:100%; border-collapse:collapse; font-size:0.8rem;
-    background:#1c2833;
-  }
+  .resumen-header-bar { padding:14px 18px 10px; border-bottom:2px solid rgba(74,149,116,0.3); flex-shrink:0; }
+  .resumen-title { font-family:'Inter',sans-serif; font-size:1.1rem; font-weight:700; letter-spacing:1px; color:var(--dorado); text-transform:uppercase; }
+  .resumen-scroll-area { flex:1; overflow-y:auto; overflow-x:auto; }
+  .resumen-table { width:100%; border-collapse:collapse; font-size:0.8rem; background:#1c2833; }
   .resumen-table thead tr { background:linear-gradient(90deg, #3a7a65, #4a9574); }
   .resumen-table thead th {
-    padding:11px 10px; font-family:'Inter',sans-serif; font-size:0.76rem;
-    font-weight:600; letter-spacing:1px; color:var(--texto-blanco);
-    text-transform:uppercase; text-align:left; white-space:nowrap;
-    border-right:1px solid rgba(255,255,255,0.15);
-    position: sticky; top:0; z-index:2;
-    background:linear-gradient(90deg, #3a7a65, #4a9574);
+    padding:11px 10px; font-family:'Inter',sans-serif; font-size:0.76rem; font-weight:600;
+    letter-spacing:1px; color:var(--texto-blanco); text-transform:uppercase; text-align:left;
+    white-space:nowrap; border-right:1px solid rgba(255,255,255,0.15);
+    position:sticky; top:0; z-index:2; background:linear-gradient(90deg, #3a7a65, #4a9574);
   }
   .resumen-table tbody tr { border-bottom:1px solid rgba(84,110,122,0.3); transition:background 0.15s; }
   .resumen-table tbody tr:hover { background:rgba(74,149,116,0.12); }
@@ -296,25 +168,12 @@
   .resumen-table td.num { text-align:right; font-family:'Inter',monospace; font-weight:500; }
   .resumen-table td.positivo { color:#81c784; }
   .resumen-table td.negativo { color:#e57373; }
-  /* totales fijos al fondo - igual que .table-footer del detalle */
-  .resumen-footer {
-    background:linear-gradient(90deg, #34495e, #2c3e50);
-    padding:10px 14px; display:flex; justify-content:flex-end; gap:32px;
-    border-top:2px solid var(--verde-claro); flex-shrink:0;
-  }
-  .resumen-footer-total {
-    font-family:'Inter',sans-serif; font-size:0.86rem; font-weight:600; color:var(--dorado);
-  }
+  .resumen-footer { background:linear-gradient(90deg, #34495e, #2c3e50); padding:10px 14px; display:flex; justify-content:flex-end; gap:32px; border-top:2px solid var(--verde-claro); flex-shrink:0; }
+  .resumen-footer-total { font-family:'Inter',sans-serif; font-size:0.86rem; font-weight:600; color:var(--dorado); }
   .resumen-footer-total span { color:var(--texto-claro); margin-left:9px; font-weight:400; }
-
-  /* DETALLE */
   .detail-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-shrink:0; }
   .detail-title { font-family:'Inter',sans-serif; font-size:1.1rem; font-weight:700; letter-spacing:1px; color:var(--dorado); text-transform:uppercase; }
-  .table-wrapper {
-    background:#2c3e50; border:1px solid #546e7a; border-radius:10px; overflow:hidden;
-    box-shadow:0 4px 22px rgba(0,0,0,0.4);
-    display:flex; flex-direction:column;
-  }
+  .table-wrapper { background:#2c3e50; border:1px solid #546e7a; border-radius:10px; overflow:hidden; box-shadow:0 4px 22px rgba(0,0,0,0.4); display:flex; flex-direction:column; }
   .table-scroll-area { flex:1; overflow-x:auto; overflow-y:auto; }
   .detail-table { width:100%; border-collapse:collapse; font-size:0.79rem; }
   .detail-table thead tr { background:linear-gradient(90deg, #3a7a65, #4a9574); }
@@ -330,33 +189,22 @@
   .detail-table td { padding:8px 10px; color:var(--texto-claro); border-right:1px solid rgba(84,110,122,0.2); white-space:nowrap; max-width:260px; overflow:hidden; text-overflow:ellipsis; }
   .detail-table td.num { text-align:right; font-family:'Inter',monospace; font-weight:500; }
   .detail-table td.credito { color:#81c784; }
-  .detail-table td.debito { color:#ffab91; }
+  .detail-table td.debito  { color:#ffab91; }
   .detail-table td.monto-neg { color:#e57373; }
   .detail-table td.monto-pos { color:#81c784; }
   .table-footer { background:linear-gradient(90deg, #34495e, #2c3e50); padding:10px 14px; display:flex; justify-content:flex-end; gap:32px; border-top:2px solid var(--verde-claro); flex-shrink:0; }
   .footer-total { font-family:'Inter',sans-serif; font-size:0.86rem; font-weight:600; color:var(--dorado); }
   .footer-total span { color:var(--texto-claro); margin-left:9px; font-weight:400; }
-  /* Detalle ocupa viewport completo */
-  #page-detalle {
-    display:none; padding:12px 24px;
-    height: calc(100vh - 130px);
-    flex-direction: column;
-  }
+  #page-detalle { display:none; padding:12px 24px; height:calc(100vh - 130px); flex-direction:column; }
   #page-detalle.active { display:flex; animation:fadeIn 0.3s ease; }
   #page-detalle .table-wrapper { flex:1; min-height:0; }
   #page-detalle .table-scroll-area { max-height:100%; }
-  /* Resumen ocupa viewport completo */
   #page-resumen { display:none; padding:12px 24px; }
   #page-resumen.active { display:block; animation:fadeIn 0.3s ease; }
-
   ::-webkit-scrollbar { width:7px; height:7px; }
   ::-webkit-scrollbar-track { background:#1c2833; }
   ::-webkit-scrollbar-thumb { background:#4a9574; border-radius:4px; }
-
-  @keyframes fadeIn {
-    from{opacity:0; transform:translateY(8px)}
-    to{opacity:1; transform:translateY(0)}
-  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 </style>
 </head>
 <body>
@@ -378,20 +226,16 @@
   <div class="tab" onclick="switchTab('detalle',this)">📋 Detalle de Transacciones</div>
 </div>
 
-<!-- ─── TOOLTIP DE BARRAS ─── -->
 <div id="global-tooltip" class="bar-tooltip">
   <div class="tooltip-title" id="tooltip-mes-label">DEBITOS POR CHEQUERA</div>
   <div class="bar-chart-container" id="tooltip-bar-container"></div>
 </div>
 
-<!-- ========== PÁGINA DASHBOARD ========== -->
+<!-- ========== DASHBOARD ========== -->
 <div id="page-dashboard" class="page active">
   <div class="dashboard-layout">
-
-    <!-- PANEL IZQUIERDO: botón + filtros 2×4 -->
     <div class="filters-panel-left">
-      <button class="btn-excel" onclick="exportarExcel()">▶ Descargar Excel</button>
-
+      <button class="btn-excel" id="btn-excel-top" onclick="exportarExcel(this)">▶ Descargar Excel</button>
       <div class="filters-section">
         <div class="filter-group">
           <div class="filter-title">Administración</div>
@@ -404,7 +248,6 @@
             {% endfor %}
           </div>
         </div>
-
         <div class="filter-group">
           <div class="filter-title">Gerencia</div>
           <div class="filter-list" id="filter-gerencia">
@@ -416,7 +259,6 @@
             {% endfor %}
           </div>
         </div>
-
         <div class="filter-group">
           <div class="filter-title">Centro de Costo</div>
           <div class="filter-list" id="filter-centro">
@@ -428,7 +270,6 @@
             {% endfor %}
           </div>
         </div>
-
         <div class="filter-group">
           <div class="filter-title">Nombre Centro Costo</div>
           <div class="filter-list" id="filter-responsable">
@@ -440,7 +281,6 @@
             {% endfor %}
           </div>
         </div>
-
         <div class="filter-group">
           <div class="filter-title">Chequera</div>
           <div class="filter-list" id="filter-chequera">
@@ -452,7 +292,6 @@
             {% endfor %}
           </div>
         </div>
-
         <div class="filter-group">
           <div class="filter-title">Cod. Administración</div>
           <div class="filter-list" id="filter-cod-admin">
@@ -464,7 +303,6 @@
             {% endfor %}
           </div>
         </div>
-
         <div class="filter-group">
           <div class="filter-title">Cod. Responsable</div>
           <div class="filter-list" id="filter-cod-responsable">
@@ -476,7 +314,6 @@
             {% endfor %}
           </div>
         </div>
-
         <div class="filter-group">
           <div class="filter-title">Cod. Centro de Costo</div>
           <div class="filter-list" id="filter-cod-centro">
@@ -490,9 +327,7 @@
         </div>
       </div>
     </div>
-    <!-- /panel izquierdo -->
 
-    <!-- PANEL DERECHO: KPIs + cilindros -->
     <div class="right-panel">
       <div class="kpis-row">
         <div class="kpi-card creditos">
@@ -508,24 +343,21 @@
           <div class="kpi-value" id="kpi-neto">{{ kpis.saldo_neto }}</div>
         </div>
       </div>
-
-      <!-- Cilindros -->
       <div class="cylinders-section">
         <div class="cylinders-grid" id="cylinders-container"></div>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- ========== PÁGINA RESUMEN DE SALDOS ========== -->
+<!-- ========== RESUMEN ========== -->
 <div id="page-resumen" class="page">
   <div class="resumen-container">
     <div class="resumen-header-bar">
       <div class="resumen-title">📈 Resumen de Saldos por Centro de Costo y Chequera</div>
     </div>
     <div class="resumen-scroll-area">
-      <table class="resumen-table" id="tabla-resumen">
+      <table class="resumen-table">
         <thead>
           <tr>
             <th>Centro de Costo</th>
@@ -547,11 +379,11 @@
   </div>
 </div>
 
-<!-- ========== PÁGINA DETALLE ========== -->
+<!-- ========== DETALLE ========== -->
 <div id="page-detalle" class="page">
   <div class="detail-header">
     <div class="detail-title">📋 Detalle de Transacciones</div>
-    <button class="btn-excel" onclick="exportarExcel()">▶ Descargar Excel</button>
+    <button class="btn-excel" id="btn-excel-detalle" onclick="exportarExcel(this)">▶ Descargar Excel</button>
   </div>
   <div class="table-wrapper">
     <div class="table-scroll-area">
@@ -566,108 +398,109 @@
 </div>
 
 <script>
-const DATOS_MESES = {{ datos_meses | tojson }};
+const DATOS_MESES     = {{ datos_meses | tojson }};
 const DATOS_CHEQUERAS = {{ datos_chequeras_mes | tojson }};
-const DATOS_RESUMEN = {{ datos_resumen | tojson }};
-const MESES_ORDEN = ['NOVIEMBRE','DICIEMBRE','ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE'];
+const MESES_ORDEN     = ['NOVIEMBRE','DICIEMBRE','ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE'];
 
-// ─── ESTADO DE DATOS FILTRADOS (para exportar Excel) ───
-let datosResumenActuales = [...DATOS_RESUMEN];
+// Estado global — se actualiza en cada filtrado
+let datosResumenActuales = {{ datos_resumen | tojson }};
+let filtrosActuales = {};
 
+// ── Utilidades ──
 function formatK(v){
-  if(!v||v===0)return'Q0';
+  if(!v||v===0) return 'Q0';
   const a=Math.abs(v);
-  let str;
-  if(a>=1e9)str=(v/1e9).toFixed(1)+'B';
-  else if(a>=1e6)str=(v/1e6).toFixed(1)+'M';
-  else if(a>=1e3)str=(v/1e3).toFixed(1)+'K';
-  else str=v.toFixed(0);
-  return 'Q'+str;
+  if(a>=1e9) return 'Q'+(v/1e9).toFixed(1)+'B';
+  if(a>=1e6) return 'Q'+(v/1e6).toFixed(1)+'M';
+  if(a>=1e3) return 'Q'+(v/1e3).toFixed(1)+'K';
+  return 'Q'+v.toFixed(0);
 }
-
 function formatCurrency(v){
   return 'Q'+(v||0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g,'$&,');
 }
 
-// ─── EXPORTAR EXCEL CON SHEETJS ───
-function exportarExcel(){
-  const wb = XLSX.utils.book_new();
+// ── EXPORTAR EXCEL (4 hojas) ──
+async function exportarExcel(btn){
+  btn.disabled = true;
+  btn.textContent = '⏳ Generando...';
+  try {
+    const wb = XLSX.utils.book_new();
 
-  // ── Hoja 1: Detalle de Transacciones (lee la tabla del DOM) ──
-  const tablaDetalle = document.querySelector('.table-wrapper .table-scroll-area table');
-  if(tablaDetalle){
-    // Extraer headers visibles
-    const ths = Array.from(tablaDetalle.querySelectorAll('thead th'))
-                     .filter(th => th.style.display !== 'none');
-    const headers = ths.map(th => th.textContent.trim());
-
-    // Extraer filas visibles
-    const filas = [];
-    tablaDetalle.querySelectorAll('tbody tr').forEach(tr => {
-      const tds = Array.from(tr.querySelectorAll('td'))
-                       .filter(td => td.style.display !== 'none');
-      const fila = tds.map(td => {
-        const txt = td.textContent.trim();
-        // Intentar convertir a número si parece numérico
-        const num = parseFloat(txt.replace(/,/g,''));
-        return isNaN(num) ? txt : num;
+    // Hoja 1 — Detalle (lee DOM directamente, columnas tal como se ven)
+    const tablaDOM = document.querySelector('.table-wrapper .table-scroll-area table');
+    if(tablaDOM){
+      const headers = Array.from(tablaDOM.querySelectorAll('thead th'))
+        .filter(th => th.style.display !== 'none')
+        .map(th => th.textContent.trim());
+      const filas = [];
+      tablaDOM.querySelectorAll('tbody tr').forEach(tr => {
+        const celdas = Array.from(tr.querySelectorAll('td'))
+          .filter(td => td.style.display !== 'none')
+          .map(td => {
+            const t = td.textContent.trim();
+            const n = parseFloat(t.replace(/,/g,''));
+            return isNaN(n) ? t : n;
+          });
+        if(celdas.length) filas.push(celdas);
       });
-      if(fila.length > 0) filas.push(fila);
+      const ws1 = XLSX.utils.aoa_to_sheet([headers, ...filas]);
+      ws1['!cols'] = headers.map(()=>({wch:20}));
+      XLSX.utils.book_append_sheet(wb, ws1, 'Detalle');
+    }
+
+    // Hoja 2 — Resumen de Saldos (datos filtrados actuales)
+    const hRes = ['Centro de Costo','Descripción','Chequera','Créditos','Débitos','Saldo'];
+    const fRes = datosResumenActuales.map(r=>[
+      r.centro_costo, r.desc_centro||'', r.chequera,
+      r.creditos, r.debitos, r.creditos - r.debitos
+    ]);
+    const ws2 = XLSX.utils.aoa_to_sheet([hRes, ...fRes]);
+    ws2['!cols'] = [20,28,22,14,14,14].map(w=>({wch:w}));
+    XLSX.utils.book_append_sheet(wb, ws2, 'Resumen de Saldos');
+
+    // Hoja 3 — KPIs por Mes
+    const hKpi = ['Mes','Créditos','Débitos','Saldo'];
+    const fKpi = MESES_ORDEN.map(mes=>{
+      const d = DATOS_MESES[mes]||{creditos:0,debitos:0};
+      return [mes, d.creditos, d.debitos, d.creditos-d.debitos];
     });
+    const ws3 = XLSX.utils.aoa_to_sheet([hKpi, ...fKpi]);
+    ws3['!cols'] = [16,14,14,14].map(w=>({wch:w}));
+    XLSX.utils.book_append_sheet(wb, ws3, 'KPIs por Mes');
 
-    const wsDetalle = XLSX.utils.aoa_to_sheet([headers, ...filas]);
+    // Hoja 4 — Datos ERP completos (sin columna USUARIO, filtrados)
+    const respErp = await fetch('/api/exportar-datos',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(filtrosActuales)
+    });
+    const dataErp = await respErp.json();
+    if(dataErp.columnas && dataErp.columnas.length > 0){
+      const ws4 = XLSX.utils.aoa_to_sheet([dataErp.columnas, ...dataErp.filas]);
+      ws4['!cols'] = dataErp.columnas.map(()=>({wch:18}));
+      XLSX.utils.book_append_sheet(wb, ws4, 'Datos ERP Completo');
+    }
 
-    // Ancho de columnas automático
-    wsDetalle['!cols'] = headers.map(() => ({ wch: 18 }));
+    const fecha = new Date().toISOString().slice(0,10).replace(/-/g,'');
+    XLSX.writeFile(wb, `reporte_IPG_${fecha}.xlsx`);
 
-    XLSX.utils.book_append_sheet(wb, wsDetalle, 'Detalle');
+  } catch(err){
+    console.error('Error Excel:', err);
+    alert('Error al generar el Excel. Intente de nuevo.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '▶ Descargar Excel';
   }
-
-  // ── Hoja 2: Resumen de Saldos (usa datosResumenActuales) ──
-  const headersResumen = ['Centro de Costo','Descripción','Chequera','Créditos','Débitos','Saldo'];
-  const filasResumen = datosResumenActuales.map(r => [
-    r.centro_costo,
-    r.desc_centro || '',
-    r.chequera,
-    r.creditos,
-    r.debitos,
-    r.creditos - r.debitos
-  ]);
-  const wsResumen = XLSX.utils.aoa_to_sheet([headersResumen, ...filasResumen]);
-  wsResumen['!cols'] = [20,28,22,14,14,14].map(w => ({ wch: w }));
-  XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen de Saldos');
-
-  // ── Hoja 3: KPIs por Mes ──
-  const headersKpis = ['Mes','Créditos','Débitos','Saldo'];
-  const filasKpis = MESES_ORDEN.map(mes => {
-    const d = DATOS_MESES[mes] || {creditos:0, debitos:0};
-    return [mes, d.creditos, d.debitos, d.creditos - d.debitos];
-  });
-  const wsKpis = XLSX.utils.aoa_to_sheet([headersKpis, ...filasKpis]);
-  wsKpis['!cols'] = [16,14,14,14].map(w => ({ wch: w }));
-  XLSX.utils.book_append_sheet(wb, wsKpis, 'KPIs por Mes');
-
-  // ── Descargar ──
-  const fecha = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  XLSX.writeFile(wb, `reporte_IPG_${fecha}.xlsx`);
 }
 
-// ─── CILINDRO SVG (igual al original, sin cambios) ───
+// ── CILINDRO SVG ──
 function buildCylinderSVG(creditos, debitos, w=100, h=160){
-  const cx=50, rx=30, ry=8, top=22, bodyH=110, bot=top+bodyH;
+  const cx=50,rx=30,ry=8,top=22,bodyH=110,bot=top+bodyH;
   const overdraft=debitos>creditos&&debitos>0;
-  const base=Math.max(creditos,1);
-  const ratio=debitos>0?Math.min(debitos/base,1.0):0;
+  const ratio=debitos>0?Math.min(debitos/Math.max(creditos,1),1.0):0;
   const fillTopY=bot-ratio*bodyH;
-
-  const c1=overdraft?'#c62828':'#d35400';
-  const c2=overdraft?'#ef5350':'#e67e22';
-  const c3=overdraft?'#ffcdd2':'#f39c12';
-
-  const labelC=formatK(creditos);
-  const labelD=formatK(debitos);
+  const c1=overdraft?'#c62828':'#d35400', c2=overdraft?'#ef5350':'#e67e22', c3=overdraft?'#ffcdd2':'#f39c12';
   const uid='c'+Math.random().toString(36).slice(2,8);
-
   return `<svg width="${w}" height="${h+28}" viewBox="0 0 ${w} ${h+28}" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
 <defs>
   <linearGradient id="gg-${uid}" x1="0" y1="0" x2="1" y2="0">
@@ -692,164 +525,112 @@ function buildCylinderSVG(creditos, debitos, w=100, h=160){
 <ellipse cx="${cx}" cy="${bot}" rx="${rx}" ry="${ry}" fill="#1a2f2a" stroke="#4a9574" stroke-width="1"/>
 <rect x="${cx-rx}" y="${top}" width="${rx*2}" height="${bodyH}" fill="url(#gg-${uid})"/>
 <line x1="${cx-rx}" y1="${top}" x2="${cx-rx}" y2="${bot}" stroke="rgba(180,235,180,0.4)" stroke-width="1.3"/>
-${ratio>0?`
-<rect x="${cx-rx+1}" y="${fillTopY}" width="${rx*2-2}" height="${bot-fillTopY}" fill="url(#gf-${uid})"/>
+${ratio>0?`<rect x="${cx-rx+1}" y="${fillTopY}" width="${rx*2-2}" height="${bot-fillTopY}" fill="url(#gf-${uid})"/>
 <line x1="${cx-rx+1}" y1="${fillTopY}" x2="${cx+rx-1}" y2="${fillTopY}" stroke="${c3}" stroke-width="1" opacity="0.7"/>
-<ellipse cx="${cx}" cy="${fillTopY}" rx="${rx-1}" ry="${ry-1}" fill="${c2}" opacity="0.6"/>
-`:''}
+<ellipse cx="${cx}" cy="${fillTopY}" rx="${rx-1}" ry="${ry-1}" fill="${c2}" opacity="0.6"/>`:''}
 <ellipse cx="${cx}" cy="${top}" rx="${rx}" ry="${ry}" fill="#2d5f4f" stroke="rgba(180,235,180,0.6)" stroke-width="1.2"/>
 <ellipse cx="${cx}" cy="${bot}" rx="${rx}" ry="${ry}" fill="#2a5a4a" stroke="rgba(180,235,180,0.5)" stroke-width="1.2"/>
 <line x1="${cx-rx-12}" y1="${top}" x2="${cx+rx+5}" y2="${top}" stroke="#f1c40f" stroke-width="1.3" stroke-dasharray="4,3" opacity="0.9"/>
 <line x1="${cx-rx-12}" y1="${top-5}" x2="${cx-rx-12}" y2="${top+5}" stroke="#f1c40f" stroke-width="1.8"/>
-<text x="${cx-rx-14}" y="${top-7}" font-family="'Inter',sans-serif" font-size="8" font-weight="700" fill="#f1c40f" text-anchor="end">${labelC}</text>
+<text x="${cx-rx-14}" y="${top-7}" font-family="'Inter',sans-serif" font-size="8" font-weight="700" fill="#f1c40f" text-anchor="end">${formatK(creditos)}</text>
 <text x="${cx-rx-14}" y="${top+14}" font-family="'Inter',sans-serif" font-size="6" fill="rgba(241,196,15,0.8)" text-anchor="end">MÁX</text>
-${ratio>0?`
-<line x1="${cx+rx+2}" y1="${fillTopY}" x2="${cx+rx+10}" y2="${fillTopY}" stroke="${overdraft?'#ff8a80':'#f39c12'}" stroke-width="1" opacity="0.85"/>
-<text x="${cx+rx+12}" y="${fillTopY+4}" font-family="'Inter',sans-serif" font-size="8" font-weight="700" fill="${overdraft?'#ff8a80':'#f39c12'}" text-anchor="start">${labelD}</text>
-`:`<text x="${cx}" y="${bot-8}" font-family="'Inter',sans-serif" font-size="7" fill="#7f8c8d" text-anchor="middle">Sin débitos</text>`}
+${ratio>0?`<line x1="${cx+rx+2}" y1="${fillTopY}" x2="${cx+rx+10}" y2="${fillTopY}" stroke="${overdraft?'#ff8a80':'#f39c12'}" stroke-width="1" opacity="0.85"/>
+<text x="${cx+rx+12}" y="${fillTopY+4}" font-family="'Inter',sans-serif" font-size="8" font-weight="700" fill="${overdraft?'#ff8a80':'#f39c12'}" text-anchor="start">${formatK(debitos)}</text>`
+:`<text x="${cx}" y="${bot-8}" font-family="'Inter',sans-serif" font-size="7" fill="#7f8c8d" text-anchor="middle">Sin débitos</text>`}
 ${overdraft?`<text x="${cx}" y="${top-13}" font-family="'Inter',sans-serif" font-size="8" font-weight="700" fill="#ff5252" text-anchor="middle">⚠ SOBRE</text>`:''}
 </svg>`;
 }
 
-// ─── TOOLTIP GRÁFICO DE BARRAS ───
-const tooltipEl = document.getElementById('global-tooltip');
-const tooltipMes = document.getElementById('tooltip-mes-label');
-const tooltipCont = document.getElementById('tooltip-bar-container');
+// ── TOOLTIP ──
+const tooltipEl=document.getElementById('global-tooltip');
+const tooltipMes=document.getElementById('tooltip-mes-label');
+const tooltipCont=document.getElementById('tooltip-bar-container');
 let hideTimeout;
-
 function posTooltip(e){
-  const tw = 340;
-  const th = 220;
-  const m = 14;
-  let x = e.clientX + m;
-  let y = e.clientY + m;
-  if(x + tw > window.innerWidth)  x = e.clientX - tw - m;
-  if(y + th > window.innerHeight) y = e.clientY - th - m;
-  tooltipEl.style.left = x + 'px';
-  tooltipEl.style.top  = y + 'px';
+  const tw=340,th=220,m=14;
+  let x=e.clientX+m, y=e.clientY+m;
+  if(x+tw>window.innerWidth)  x=e.clientX-tw-m;
+  if(y+th>window.innerHeight) y=e.clientY-th-m;
+  tooltipEl.style.left=x+'px'; tooltipEl.style.top=y+'px';
 }
-
-function mostrarTooltipBarras(mes, e){
-  clearTimeout(hideTimeout);
-  posTooltip(e);
-  tooltipMes.textContent = mes + ' · Débitos por chequera';
+function mostrarTooltipBarras(mes,e){
+  clearTimeout(hideTimeout); posTooltip(e);
+  tooltipMes.textContent=mes+' · Débitos por chequera';
   tooltipEl.classList.add('visible');
-
-  const chequData = DATOS_CHEQUERAS[mes] || {};
-  const nombres = Object.keys(chequData);
-  const debitos = Object.values(chequData);
-
-  if(nombres.length === 0){
-    tooltipCont.innerHTML = '<div class="no-data-msg">Sin débitos registrados</div>';
-    return;
-  }
-
-  const maxVal = Math.max(...debitos.map(Math.abs), 1);
-
-  let html = '';
-  nombres.forEach((nom, i) => {
-    const val = debitos[i];
-    const saldo = -val;
-    const pct = Math.min((Math.abs(val) / maxVal) * 100, 100);
-    const clase = val === 0 ? 'neutro' : (saldo >= 0 ? 'positivo' : 'negativo');
-    const label = formatK(val);
-
-    html += `
-      <div class="bar-row">
-        <div class="bar-label" title="${nom}">${nom}</div>
-        <div class="bar-track">
-          <div class="bar-fill ${clase}" style="width:${pct}%">
-            <span class="bar-value">${label}</span>
-          </div>
-        </div>
-      </div>`;
-  });
-
-  tooltipCont.innerHTML = html;
+  const ch=DATOS_CHEQUERAS[mes]||{};
+  const noms=Object.keys(ch), debs=Object.values(ch);
+  if(!noms.length){ tooltipCont.innerHTML='<div class="no-data-msg">Sin débitos registrados</div>'; return; }
+  const maxV=Math.max(...debs.map(Math.abs),1);
+  tooltipCont.innerHTML=noms.map((n,i)=>{
+    const v=debs[i], pct=Math.min(Math.abs(v)/maxV*100,100);
+    const cls=v===0?'neutro':(-v>=0?'positivo':'negativo');
+    return `<div class="bar-row"><div class="bar-label" title="${n}">${n}</div><div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct}%"><span class="bar-value">${formatK(v)}</span></div></div></div>`;
+  }).join('');
 }
-
 function moverTooltip(e){ posTooltip(e); }
-function ocultarTooltip(){ hideTimeout = setTimeout(() => tooltipEl.classList.remove('visible'), 130); }
+function ocultarTooltip(){ hideTimeout=setTimeout(()=>tooltipEl.classList.remove('visible'),130); }
 
-// ─── RENDER CILINDROS ───
+// ── RENDER CILINDROS ──
 function renderCilindros(dm){
-  const c = document.getElementById('cylinders-container');
-  c.innerHTML = '';
-  MESES_ORDEN.forEach(mes => {
-    const d = dm[mes] || {creditos:0, debitos:0};
-    const card = document.createElement('div');
-    card.className = 'cylinder-card';
-    card.innerHTML = `
-      <div class="cylinder-title">${mes}</div>
-      <div class="cyl-svg-wrap">${buildCylinderSVG(d.creditos, d.debitos)}</div>
-    `;
+  const c=document.getElementById('cylinders-container');
+  c.innerHTML='';
+  MESES_ORDEN.forEach(mes=>{
+    const d=dm[mes]||{creditos:0,debitos:0};
+    const card=document.createElement('div');
+    card.className='cylinder-card';
+    card.innerHTML=`<div class="cylinder-title">${mes}</div><div class="cyl-svg-wrap">${buildCylinderSVG(d.creditos,d.debitos)}</div>`;
     c.appendChild(card);
-    card.addEventListener('mouseenter', e => mostrarTooltipBarras(mes, e));
-    card.addEventListener('mousemove',  e => moverTooltip(e));
-    card.addEventListener('mouseleave', () => ocultarTooltip());
+    card.addEventListener('mouseenter',e=>mostrarTooltipBarras(mes,e));
+    card.addEventListener('mousemove', e=>moverTooltip(e));
+    card.addEventListener('mouseleave',()=>ocultarTooltip());
   });
 }
 
-// ─── RENDER RESUMEN ───
+// ── RENDER RESUMEN ──
 function renderResumen(datos){
-  const tbody = document.getElementById('tbody-resumen');
-  tbody.innerHTML = '';
-  let totalCred = 0, totalDeb = 0;
-
-  if(!datos || datos.length === 0){
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:#95a5a6;">Sin datos para mostrar</td></tr>';
-    ['total-creditos','total-debitos'].forEach(id => document.getElementById(id).textContent = 'Q0.00');
-    document.getElementById('total-saldo').textContent = 'Q0.00';
+  const tbody=document.getElementById('tbody-resumen');
+  tbody.innerHTML='';
+  let tC=0,tD=0;
+  if(!datos||!datos.length){
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#95a5a6;">Sin datos para mostrar</td></tr>';
+    document.getElementById('total-creditos').textContent='Q0.00';
+    document.getElementById('total-debitos').textContent='Q0.00';
+    document.getElementById('total-saldo').textContent='Q0.00';
     return;
   }
-
-  const sorted = [...datos].sort((a, b) => {
-    const saldoA = (a.creditos || 0) - (a.debitos || 0);
-    const saldoB = (b.creditos || 0) - (b.debitos || 0);
-    return saldoA - saldoB;
-  });
-
-  sorted.forEach(row => {
-    const saldo = row.creditos - row.debitos;
-    totalCred += row.creditos;
-    totalDeb  += row.debitos;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${row.centro_costo}</td>
-      <td>${row.desc_centro||''}</td>
-      <td>${row.chequera}</td>
+  [...datos].sort((a,b)=>((a.creditos-a.debitos)-(b.creditos-b.debitos))).forEach(row=>{
+    const saldo=row.creditos-row.debitos; tC+=row.creditos; tD+=row.debitos;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${row.centro_costo}</td><td>${row.desc_centro||''}</td><td>${row.chequera}</td>
       <td class="num positivo">${formatCurrency(row.creditos)}</td>
       <td class="num negativo">${formatCurrency(row.debitos)}</td>
-      <td class="num ${saldo>=0?'positivo':'negativo'}">${formatCurrency(saldo)}</td>
-    `;
+      <td class="num ${saldo>=0?'positivo':'negativo'}">${formatCurrency(saldo)}</td>`;
     tbody.appendChild(tr);
   });
-
-  const totalSaldo = totalCred - totalDeb;
-  document.getElementById('total-creditos').textContent = formatCurrency(totalCred);
-  document.getElementById('total-debitos').textContent  = formatCurrency(totalDeb);
-  const saldoEl = document.getElementById('total-saldo');
-  saldoEl.textContent = formatCurrency(totalSaldo);
-  saldoEl.style.color = totalSaldo >= 0 ? '#81c784' : '#e57373';
+  document.getElementById('total-creditos').textContent=formatCurrency(tC);
+  document.getElementById('total-debitos').textContent=formatCurrency(tD);
+  const sEl=document.getElementById('total-saldo');
+  sEl.textContent=formatCurrency(tC-tD);
+  sEl.style.color=(tC-tD)>=0?'#81c784':'#e57373';
 }
 
-// ─── TABS ───
-function switchTab(p, el){
-  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+// ── TABS ──
+function switchTab(p,el){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   el.classList.add('active');
-  if(p === 'dashboard') setTimeout(() => renderCilindros(DATOS_MESES), 100);
-  if(p === 'resumen')   renderResumen(DATOS_RESUMEN);
+  if(p==='dashboard') setTimeout(()=>renderCilindros(DATOS_MESES),100);
+  if(p==='resumen')   renderResumen(datosResumenActuales);
 }
 
-// ─── FILTROS ───
+// ── FILTROS ──
 function getChecked(id){
-  return Array.from(document.querySelectorAll(`#${id} input[type=checkbox]:checked`)).map(b => b.value);
+  return Array.from(document.querySelectorAll(`#${id} input[type=checkbox]:checked`)).map(b=>b.value);
 }
 
 function aplicarFiltros(){
-  const filtros = {
+  filtrosActuales = {
     administracion:  getChecked('filter-administracion'),
     gerencia:        getChecked('filter-gerencia'),
     responsable:     getChecked('filter-responsable'),
@@ -859,107 +640,67 @@ function aplicarFiltros(){
     cod_admin:       getChecked('filter-cod-admin'),
     cod_centro:      getChecked('filter-cod-centro'),
   };
-  fetch('/api/filtrar',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(filtros)
-  })
-  .then(r => r.json())
-  .then(data => {
-    document.getElementById('kpi-creditos').textContent = data.kpis.total_creditos;
-    document.getElementById('kpi-debitos').textContent  = data.kpis.total_debitos;
-    document.getElementById('kpi-neto').textContent     = data.kpis.saldo_neto;
+  fetch('/api/filtrar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(filtrosActuales)})
+  .then(r=>r.json())
+  .then(data=>{
+    // KPIs
+    document.getElementById('kpi-creditos').textContent    = data.kpis.total_creditos;
+    document.getElementById('kpi-debitos').textContent     = data.kpis.total_debitos;
+    document.getElementById('kpi-neto').textContent        = data.kpis.saldo_neto;
     document.getElementById('footer-creditos').textContent = data.kpis.total_creditos;
     document.getElementById('footer-debitos').textContent  = data.kpis.total_debitos;
     document.getElementById('footer-neto').textContent     = data.kpis.saldo_neto;
-    if(data.datos_chequeras_mes){
-      Object.keys(DATOS_CHEQUERAS).forEach(k => delete DATOS_CHEQUERAS[k]);
-      Object.assign(DATOS_CHEQUERAS, data.datos_chequeras_mes);
-    }
-    // Actualizar estado filtrado para Excel
+    // Sync chequeras y meses
+    if(data.datos_chequeras_mes){ Object.keys(DATOS_CHEQUERAS).forEach(k=>delete DATOS_CHEQUERAS[k]); Object.assign(DATOS_CHEQUERAS,data.datos_chequeras_mes); }
+    if(data.datos_meses){ Object.keys(DATOS_MESES).forEach(k=>delete DATOS_MESES[k]); Object.assign(DATOS_MESES,data.datos_meses); }
+    // Actualizar estado global de resumen
     if(data.datos_resumen) datosResumenActuales = data.datos_resumen;
-    // Actualizar DATOS_MESES para Excel de KPIs
-    if(data.datos_meses){
-      Object.keys(DATOS_MESES).forEach(k => delete DATOS_MESES[k]);
-      Object.assign(DATOS_MESES, data.datos_meses);
-    }
+    // Renderizar
     renderCilindros(data.datos_meses);
-    if(data.datos_resumen) renderResumen(data.datos_resumen);
+    // Si resumen está visible, actualizar también
+    if(document.getElementById('page-resumen').classList.contains('active')) renderResumen(datosResumenActuales);
+    // Tabla detalle
     document.querySelector('.table-wrapper .table-scroll-area').innerHTML = data.tabla_html;
     fixDetalleTable();
   })
-  .catch(e => console.error('Error filtros:', e));
+  .catch(e=>console.error('Error filtros:',e));
 }
 
-// ─── FIX TABLA DETALLE: reemplaza FECHA_DOCU por FECHA_OPER y ordena desc por fecha ───
+// ── FIX TABLA DETALLE ──
+// El backend ya envía FECHA_OPER directamente, solo ordenamos por esa columna
 function fixDetalleTable(){
-  const scrollArea = document.querySelector('.table-wrapper .table-scroll-area');
-  if(!scrollArea) return;
-  const table = scrollArea.querySelector('table');
-  if(!table) return;
-
-  const thead = table.querySelector('thead tr');
-  const tbody = table.querySelector('tbody');
-  if(!thead || !tbody) return;
-
-  const ths = Array.from(thead.querySelectorAll('th'));
-
-  let idxDocuOld = -1, idxOper = -1;
-  ths.forEach((th, i) => {
-    const txt = th.textContent.trim().toUpperCase();
-    if(txt === 'FECHA_DOCU') idxDocuOld = i;
-    if(txt === 'FECHA_OPER') idxOper = i;
+  const sa=document.querySelector('.table-wrapper .table-scroll-area');
+  if(!sa) return;
+  const tbl=sa.querySelector('table');
+  if(!tbl) return;
+  const ths=Array.from(tbl.querySelectorAll('thead th'));
+  let sortIdx=-1;
+  ths.forEach((th,i)=>{ if(th.textContent.trim().toUpperCase()==='FECHA_OPER') sortIdx=i; });
+  if(sortIdx<0) return;
+  const tbody=tbl.querySelector('tbody');
+  if(!tbody) return;
+  const rows=Array.from(tbody.querySelectorAll('tr'));
+  const parseDate=s=>{
+    if(!s) return 0;
+    if(/^\d{4}-\d{2}-\d{2}/.test(s)) return new Date(s).getTime();
+    const p=s.split(/[\/\-]/);
+    if(p.length===3){
+      if(p[0].length===4) return new Date(s).getTime();
+      return new Date(`${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`).getTime();
+    }
+    return new Date(s).getTime();
+  };
+  rows.sort((a,b)=>{
+    const tA=a.querySelectorAll('td'), tB=b.querySelectorAll('td');
+    return parseDate(tB[sortIdx]?.textContent.trim()||'') - parseDate(tA[sortIdx]?.textContent.trim()||'');
   });
-
-  if(idxOper >= 0 && idxDocuOld >= 0){
-    ths[idxDocuOld].textContent = 'FECHA_OPER';
-    ths[idxOper].style.display = 'none';
-
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    rows.forEach(tr => {
-      const tds = tr.querySelectorAll('td');
-      if(tds[idxOper] && tds[idxDocuOld]){
-        tds[idxDocuOld].textContent = tds[idxOper].textContent;
-        tds[idxOper].style.display = 'none';
-      }
-    });
-    idxDocuOld = idxDocuOld;
-  } else if(idxOper < 0 && idxDocuOld >= 0){
-    ths[idxDocuOld].textContent = 'FECHA_OPER';
-  }
-
-  const sortIdx = idxOper >= 0 ? idxDocuOld : idxDocuOld;
-
-  if(sortIdx < 0) return;
-
-  const rows = Array.from(tbody.querySelectorAll('tr'));
-  rows.sort((a, b) => {
-    const tdsA = a.querySelectorAll('td');
-    const tdsB = b.querySelectorAll('td');
-    const rawA = tdsA[sortIdx] ? tdsA[sortIdx].textContent.trim() : '';
-    const rawB = tdsB[sortIdx] ? tdsB[sortIdx].textContent.trim() : '';
-    const parseDate = s => {
-      if(!s) return 0;
-      if(/^\d{4}-\d{2}-\d{2}/.test(s)) return new Date(s).getTime();
-      const p = s.split(/[\/\-]/);
-      if(p.length === 3){
-        if(p[0].length === 4) return new Date(s).getTime();
-        return new Date(`${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`).getTime();
-      }
-      return new Date(s).getTime();
-    };
-    return parseDate(rawB) - parseDate(rawA);
-  });
-
-  rows.forEach(r => tbody.appendChild(r));
+  rows.forEach(r=>tbody.appendChild(r));
 }
 
-// ─── INICIO ───
+// ── INICIO ──
 renderCilindros(DATOS_MESES);
-renderResumen(DATOS_RESUMEN);
-document.addEventListener('DOMContentLoaded', () => {
-  fixDetalleTable();
-});
+renderResumen(datosResumenActuales);
+document.addEventListener('DOMContentLoaded',()=>fixDetalleTable());
 fixDetalleTable();
 </script>
 </body>
