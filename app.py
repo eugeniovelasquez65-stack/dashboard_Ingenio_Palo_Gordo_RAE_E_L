@@ -99,26 +99,12 @@ def obtener_datos_usuario(correo):
 
 
 def obtener_datos_erp_usuario(correo):
-    """Retorna los datos ERP filtrados por los CCUs permitidos del usuario."""
-    _, df_accesos, df_usuarios = cargar_datos()
-    df_erp = cargar_datos_erp()
-    if df_erp.empty or df_accesos.empty or df_usuarios.empty:
+    df, _ = obtener_datos_usuario(correo)
+    if df.empty:
         return pd.DataFrame()
-    df_usuarios['USUARIO'] = df_usuarios['USUARIO'].astype(str).str.strip().str.lower()
-    correo_lower = correo.strip().lower()
-    fila_usuario = df_usuarios[df_usuarios['USUARIO'] == correo_lower]
-    if fila_usuario.empty:
-        return pd.DataFrame()
-    usuario_sistema = str(fila_usuario.iloc[0]['USUARIO_NOMBRE']).strip().lower()
-    df_accesos['USUARIO'] = df_accesos['USUARIO'].astype(str).str.strip().str.lower()
-    accesos_usuario = df_accesos[df_accesos['USUARIO'] == usuario_sistema]
-    if accesos_usuario.empty:
-        return pd.DataFrame()
-    ccus_permitidos = accesos_usuario['CCU'].astype(str).str.strip().tolist()
-    if 'CENTRO_COSTO' in df_erp.columns:
-        df_erp['CENTRO_COSTO'] = df_erp['CENTRO_COSTO'].astype(str).str.strip()
-        return df_erp[df_erp['CENTRO_COSTO'].isin(ccus_permitidos)]
-    return df_erp
+    if 'USUARIO' in df.columns:
+        df = df.drop(columns=['USUARIO'])
+    return df
 
 
 def calcular_chequeras_por_mes(df):
