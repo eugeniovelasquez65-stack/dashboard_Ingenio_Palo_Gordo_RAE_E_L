@@ -35,28 +35,25 @@ def cargar_datos():
 
 
 def cargar_datos_erp():
-    """Carga el JSON datos_presupuesto_erp, soporta raíz como lista o dict con 'recordset'."""
     try:
         ruta = os.path.join(BASE_DIR, 'data', 'datos_presupuesto_erp.json')
         with open(ruta, 'r', encoding='latin-1') as f:
-            raw = json.load(f)
+            contenido = f.read()
+        # Limpiar caracteres de control inválidos para JSON
+        contenido_limpio = ''.join(
+            c if ord(c) >= 32 or c in '\n\r\t' else ' '
+            for c in contenido
+        )
+        raw = json.loads(contenido_limpio)
         if isinstance(raw, list):
             registros = raw
         elif isinstance(raw, dict):
-            # Buscar la primera clave que sea lista
-            registros = None
-            for v in raw.values():
-                if isinstance(v, list):
-                    registros = v
-                    break
-            if registros is None:
-                registros = []
+            registros = next((v for v in raw.values() if isinstance(v, list)), [])
         else:
             registros = []
         df = pd.DataFrame(registros)
         if not df.empty:
             df.columns = df.columns.str.strip().str.upper()
-            # Eliminar columna USUARIO si existe
             if 'USUARIO' in df.columns:
                 df = df.drop(columns=['USUARIO'])
         return df
