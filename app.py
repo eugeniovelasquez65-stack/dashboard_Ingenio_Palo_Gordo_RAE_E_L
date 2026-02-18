@@ -38,7 +38,7 @@ def cargar_datos_erp():
     """Carga el JSON datos_presupuesto_erp, soporta raíz como lista o dict con 'recordset'."""
     try:
         ruta = os.path.join(BASE_DIR, 'data', 'datos_presupuesto_erp.json')
-        with open(ruta, 'r', encoding='utf-8') as f:
+        with open(ruta, 'r', encoding='latin-1') as f:
             raw = json.load(f)
         if isinstance(raw, list):
             registros = raw
