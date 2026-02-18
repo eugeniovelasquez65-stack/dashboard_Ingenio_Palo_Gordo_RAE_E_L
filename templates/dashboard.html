@@ -6,6 +6,7 @@
 <title>Dashboard Empresarial - Ingenio</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   :root {
     --verde-corp: #2d5f4f;
@@ -389,7 +390,7 @@
 
     <!-- PANEL IZQUIERDO: botón + filtros 2×4 -->
     <div class="filters-panel-left">
-      <a href="/exportar-excel" class="btn-excel">▶ Descargar Excel</a>
+      <button class="btn-excel" onclick="exportarExcel()">▶ Descargar Excel</button>
 
       <div class="filters-section">
         <div class="filter-group">
@@ -550,7 +551,7 @@
 <div id="page-detalle" class="page">
   <div class="detail-header">
     <div class="detail-title">📋 Detalle de Transacciones</div>
-    <a href="/exportar-excel" class="btn-excel">▶ Descargar Excel</a>
+    <button class="btn-excel" onclick="exportarExcel()">▶ Descargar Excel</button>
   </div>
   <div class="table-wrapper">
     <div class="table-scroll-area">
@@ -570,6 +571,9 @@ const DATOS_CHEQUERAS = {{ datos_chequeras_mes | tojson }};
 const DATOS_RESUMEN = {{ datos_resumen | tojson }};
 const MESES_ORDEN = ['NOVIEMBRE','DICIEMBRE','ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE'];
 
+// ─── ESTADO DE DATOS FILTRADOS (para exportar Excel) ───
+let datosResumenActuales = [...DATOS_RESUMEN];
+
 function formatK(v){
   if(!v||v===0)return'Q0';
   const a=Math.abs(v);
@@ -583,6 +587,69 @@ function formatK(v){
 
 function formatCurrency(v){
   return 'Q'+(v||0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g,'$&,');
+}
+
+// ─── EXPORTAR EXCEL CON SHEETJS ───
+function exportarExcel(){
+  const wb = XLSX.utils.book_new();
+
+  // ── Hoja 1: Detalle de Transacciones (lee la tabla del DOM) ──
+  const tablaDetalle = document.querySelector('.table-wrapper .table-scroll-area table');
+  if(tablaDetalle){
+    // Extraer headers visibles
+    const ths = Array.from(tablaDetalle.querySelectorAll('thead th'))
+                     .filter(th => th.style.display !== 'none');
+    const headers = ths.map(th => th.textContent.trim());
+
+    // Extraer filas visibles
+    const filas = [];
+    tablaDetalle.querySelectorAll('tbody tr').forEach(tr => {
+      const tds = Array.from(tr.querySelectorAll('td'))
+                       .filter(td => td.style.display !== 'none');
+      const fila = tds.map(td => {
+        const txt = td.textContent.trim();
+        // Intentar convertir a número si parece numérico
+        const num = parseFloat(txt.replace(/,/g,''));
+        return isNaN(num) ? txt : num;
+      });
+      if(fila.length > 0) filas.push(fila);
+    });
+
+    const wsDetalle = XLSX.utils.aoa_to_sheet([headers, ...filas]);
+
+    // Ancho de columnas automático
+    wsDetalle['!cols'] = headers.map(() => ({ wch: 18 }));
+
+    XLSX.utils.book_append_sheet(wb, wsDetalle, 'Detalle');
+  }
+
+  // ── Hoja 2: Resumen de Saldos (usa datosResumenActuales) ──
+  const headersResumen = ['Centro de Costo','Descripción','Chequera','Créditos','Débitos','Saldo'];
+  const filasResumen = datosResumenActuales.map(r => [
+    r.centro_costo,
+    r.desc_centro || '',
+    r.chequera,
+    r.creditos,
+    r.debitos,
+    r.creditos - r.debitos
+  ]);
+  const wsResumen = XLSX.utils.aoa_to_sheet([headersResumen, ...filasResumen]);
+  wsResumen['!cols'] = [20,28,22,14,14,14].map(w => ({ wch: w }));
+  XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen de Saldos');
+
+  // ── Hoja 3: KPIs por Mes ──
+  const headersKpis = ['Mes','Créditos','Débitos','Saldo'];
+  const filasKpis = MESES_ORDEN.map(mes => {
+    const d = DATOS_MESES[mes] || {creditos:0, debitos:0};
+    return [mes, d.creditos, d.debitos, d.creditos - d.debitos];
+  });
+  const wsKpis = XLSX.utils.aoa_to_sheet([headersKpis, ...filasKpis]);
+  wsKpis['!cols'] = [16,14,14,14].map(w => ({ wch: w }));
+  XLSX.utils.book_append_sheet(wb, wsKpis, 'KPIs por Mes');
+
+  // ── Descargar ──
+  const fecha = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  XLSX.writeFile(wb, `reporte_IPG_${fecha}.xlsx`);
 }
 
 // ─── CILINDRO SVG (igual al original, sin cambios) ───
@@ -672,10 +739,6 @@ function mostrarTooltipBarras(mes, e){
   const nombres = Object.keys(chequData);
   const debitos = Object.values(chequData);
 
-  // Saldo = crédito del mes - débito por chequera
-  // Como los datos originales solo tienen débitos por chequera, mostramos saldo = -débito
-  // Si tienes crédito por chequera en otro campo, ajusta aquí.
-  // Por ahora mostramos: Débito (negativo = gasto)
   if(nombres.length === 0){
     tooltipCont.innerHTML = '<div class="no-data-msg">Sin débitos registrados</div>';
     return;
@@ -686,7 +749,7 @@ function mostrarTooltipBarras(mes, e){
   let html = '';
   nombres.forEach((nom, i) => {
     const val = debitos[i];
-    const saldo = -val; // el saldo es negativo (es un débito/gasto)
+    const saldo = -val;
     const pct = Math.min((Math.abs(val) / maxVal) * 100, 100);
     const clase = val === 0 ? 'neutro' : (saldo >= 0 ? 'positivo' : 'negativo');
     const label = formatK(val);
@@ -740,7 +803,6 @@ function renderResumen(datos){
     return;
   }
 
-  // Ordenar de menor a mayor por saldo (creditos - debitos)
   const sorted = [...datos].sort((a, b) => {
     const saldoA = (a.creditos || 0) - (a.debitos || 0);
     const saldoB = (b.creditos || 0) - (b.debitos || 0);
@@ -814,6 +876,13 @@ function aplicarFiltros(){
       Object.keys(DATOS_CHEQUERAS).forEach(k => delete DATOS_CHEQUERAS[k]);
       Object.assign(DATOS_CHEQUERAS, data.datos_chequeras_mes);
     }
+    // Actualizar estado filtrado para Excel
+    if(data.datos_resumen) datosResumenActuales = data.datos_resumen;
+    // Actualizar DATOS_MESES para Excel de KPIs
+    if(data.datos_meses){
+      Object.keys(DATOS_MESES).forEach(k => delete DATOS_MESES[k]);
+      Object.assign(DATOS_MESES, data.datos_meses);
+    }
     renderCilindros(data.datos_meses);
     if(data.datos_resumen) renderResumen(data.datos_resumen);
     document.querySelector('.table-wrapper .table-scroll-area').innerHTML = data.tabla_html;
@@ -835,7 +904,6 @@ function fixDetalleTable(){
 
   const ths = Array.from(thead.querySelectorAll('th'));
 
-  // Encontrar índice de FECHA_DOCU y FECHA_OPER
   let idxDocuOld = -1, idxOper = -1;
   ths.forEach((th, i) => {
     const txt = th.textContent.trim().toUpperCase();
@@ -843,13 +911,10 @@ function fixDetalleTable(){
     if(txt === 'FECHA_OPER') idxOper = i;
   });
 
-  // Si FECHA_OPER existe como columna separada: reemplazar FECHA_DOCU con FECHA_OPER
   if(idxOper >= 0 && idxDocuOld >= 0){
-    // Renombrar header de FECHA_DOCU → FECHA_OPER y quitar columna FECHA_OPER original
     ths[idxDocuOld].textContent = 'FECHA_OPER';
     ths[idxOper].style.display = 'none';
 
-    // En cada fila: copiar valor FECHA_OPER a posición FECHA_DOCU y ocultar celda FECHA_OPER
     const rows = Array.from(tbody.querySelectorAll('tr'));
     rows.forEach(tr => {
       const tds = tr.querySelectorAll('td');
@@ -858,39 +923,32 @@ function fixDetalleTable(){
         tds[idxOper].style.display = 'none';
       }
     });
-    idxDocuOld = idxDocuOld; // now this column holds FECHA_OPER values
+    idxDocuOld = idxDocuOld;
   } else if(idxOper < 0 && idxDocuOld >= 0){
-    // Solo renombrar cabecera
     ths[idxDocuOld].textContent = 'FECHA_OPER';
   }
 
-  // Determinar índice de fecha para ordenar (FECHA_OPER/FECHA_DOCU)
   const sortIdx = idxOper >= 0 ? idxDocuOld : idxDocuOld;
 
   if(sortIdx < 0) return;
 
-  // Ordenar filas de más reciente a más antigua
   const rows = Array.from(tbody.querySelectorAll('tr'));
   rows.sort((a, b) => {
     const tdsA = a.querySelectorAll('td');
     const tdsB = b.querySelectorAll('td');
     const rawA = tdsA[sortIdx] ? tdsA[sortIdx].textContent.trim() : '';
     const rawB = tdsB[sortIdx] ? tdsB[sortIdx].textContent.trim() : '';
-    // Parsear fecha: soporta DD/MM/YYYY, YYYY-MM-DD, MM/DD/YYYY
     const parseDate = s => {
       if(!s) return 0;
-      // ISO format YYYY-MM-DD
       if(/^\d{4}-\d{2}-\d{2}/.test(s)) return new Date(s).getTime();
-      // DD/MM/YYYY
       const p = s.split(/[\/\-]/);
       if(p.length === 3){
         if(p[0].length === 4) return new Date(s).getTime();
-        // Try DD/MM/YYYY
         return new Date(`${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`).getTime();
       }
       return new Date(s).getTime();
     };
-    return parseDate(rawB) - parseDate(rawA); // desc
+    return parseDate(rawB) - parseDate(rawA);
   });
 
   rows.forEach(r => tbody.appendChild(r));
@@ -899,11 +957,9 @@ function fixDetalleTable(){
 // ─── INICIO ───
 renderCilindros(DATOS_MESES);
 renderResumen(DATOS_RESUMEN);
-// Aplicar fix de tabla detalle al cargar
 document.addEventListener('DOMContentLoaded', () => {
   fixDetalleTable();
 });
-// Por si el DOM ya está listo
 fixDetalleTable();
 </script>
 </body>
