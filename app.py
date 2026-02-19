@@ -99,9 +99,10 @@ def obtener_datos_erp_usuario(correo):
 def aplicar_filtros_df(df, filtros):
     df=df.copy()
     df.columns=df.columns.str.strip().str.upper()
+    # ADMINISTRACION → DESCRI_GER  |  GERENCIA → DESCRI_RES
     mapa={
-        'administracion': 'DES_ADMINSTRACION',
-        'gerencia':       'DES_GERENCIA',
+        'administracion': 'DESCRI_GER',
+        'gerencia':       'DESCRI_RES',
         'responsable':    'DES_RESPONSABLE',
         'centro_costo':   'CENTRO_COSTO',
         'chequera':       'NOMBRE_CHEQUERA',
@@ -215,24 +216,36 @@ def obtener_segmentadores(df):
         if col not in df.columns: return []
         v=df[col].dropna().astype(str).str.strip()
         return sorted(v[v.str.lower()!='nan'].unique().tolist())
-    return {'administraciones':u('DES_ADMINSTRACION'),'gerencias':u('DES_GERENCIA'),
-            'centros_costo':u('CENTRO_COSTO'),'responsables':u('DES_RESPONSABLE'),
-            'chequeras':u('NOMBRE_CHEQUERA'),'cod_administraciones':u('ADMINISTRACION'),
-            'cod_responsables':u('GERENCIA'),'cod_centros':u('RESPONSABLE')}
+    return {
+        # ADMINISTRACION usa DESCRI_GER  |  GERENCIA usa DESCRI_RES
+        'administraciones': u('DESCRI_GER'),
+        'gerencias':        u('DESCRI_RES'),
+        'centros_costo':    u('CENTRO_COSTO'),
+        'responsables':     u('DES_RESPONSABLE'),
+        'chequeras':        u('NOMBRE_CHEQUERA'),
+        'cod_administraciones': u('ADMINISTRACION'),
+        'cod_responsables': u('GERENCIA'),
+        'cod_centros':      u('RESPONSABLE'),
+    }
 
 
 def obtener_segmentadores_cascada(df):
-    """Valores disponibles para filtro en cascada — claves en formato frontend."""
     if df.empty: return {}
     df=df.copy(); df.columns=df.columns.str.strip().str.upper()
     def u(col):
         if col not in df.columns: return []
         v=df[col].dropna().astype(str).str.strip()
         return sorted(v[v.str.lower()!='nan'].unique().tolist())
-    return {'administracion':u('DES_ADMINSTRACION'),'gerencia':u('DES_GERENCIA'),
-            'centro_costo':u('CENTRO_COSTO'),'responsable':u('DES_RESPONSABLE'),
-            'chequera':u('NOMBRE_CHEQUERA'),'cod_admin':u('ADMINISTRACION'),
-            'cod_responsable':u('GERENCIA'),'cod_centro':u('RESPONSABLE')}
+    return {
+        'administracion':  u('DESCRI_GER'),
+        'gerencia':        u('DESCRI_RES'),
+        'centro_costo':    u('CENTRO_COSTO'),
+        'responsable':     u('DES_RESPONSABLE'),
+        'chequera':        u('NOMBRE_CHEQUERA'),
+        'cod_admin':       u('ADMINISTRACION'),
+        'cod_responsable': u('GERENCIA'),
+        'cod_centro':      u('RESPONSABLE'),
+    }
 
 
 @app.route('/')

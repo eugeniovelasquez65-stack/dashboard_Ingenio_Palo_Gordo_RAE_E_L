@@ -32,30 +32,23 @@
   .filters-panel-left { display:flex; flex-direction:column; gap:10px; position:sticky; top:0; }
   .right-panel { display:flex; flex-direction:column; gap:13px; min-width:0; }
   .filters-section { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .btn-excel { background:linear-gradient(135deg,#34495e,#2c3e50); border:1.5px solid var(--verde-claro); color:var(--texto-claro); padding:9px 22px; border-radius:8px; cursor:pointer; font-size:0.83rem; font-weight:500; display:flex; align-items:center; gap:8px; justify-content:center; transition:all 0.2s; width:auto; }
-  .btn-excel:hover { background:linear-gradient(135deg,#3a7a65,#2d5f4f); }
+  .buttons-row { display:flex; gap:8px; width:100%; }
+  .btn-excel { background:linear-gradient(135deg,#34495e,#2c3e50); border:1.5px solid var(--verde-claro); color:var(--texto-claro); padding:9px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem; font-weight:500; display:flex; align-items:center; gap:6px; justify-content:center; transition:all 0.2s; flex:1; }
+  .btn-excel:hover { background:linear-gradient(135deg,#3a7a65,#2d5f4f); box-shadow:0 0 16px rgba(74,149,116,0.35); }
   .btn-excel:disabled { opacity:0.6; cursor:not-allowed; }
+  .btn-limpiar { background:linear-gradient(135deg,#4a2c2c,#6b3535); border:1.5px solid #e74c3c; color:#ffb3b3; padding:9px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem; font-weight:500; display:flex; align-items:center; gap:6px; justify-content:center; transition:all 0.2s; flex:1; }
+  .btn-limpiar:hover { background:linear-gradient(135deg,#6b3535,#8b2e2e); box-shadow:0 0 16px rgba(231,76,60,0.35); }
   .filter-group { background:linear-gradient(135deg,#2c3e50,#34495e); border:1px solid #546e7a; border-radius:8px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.35); }
   .filter-title { background:linear-gradient(90deg,#3a7a65,#4a9574); padding:6px 11px; font-family:'Inter',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:1.2px; color:var(--texto-blanco); text-transform:uppercase; text-align:center; }
-
-  /* ALTURA FIJA siempre */
-  .filter-list {
-    padding:5px 7px;
-    height:156px; min-height:156px; max-height:156px;
-    overflow-y:auto;
-    scrollbar-width:thin; scrollbar-color:#4a9574 #2c3e50;
-  }
+  .filter-list { padding:5px 7px; height:156px; min-height:156px; max-height:156px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:#4a9574 #2c3e50; }
   .filter-list::-webkit-scrollbar { width:5px; }
   .filter-list::-webkit-scrollbar-track { background:#2c3e50; }
   .filter-list::-webkit-scrollbar-thumb { background:#4a9574; border-radius:3px; }
-
   .filter-item { display:flex; align-items:center; gap:7px; padding:3px 5px; cursor:pointer; border-radius:4px; transition:background 0.15s; min-height:26px; }
   .filter-item:hover { background:rgba(74,149,116,0.18); }
   .filter-item input[type="checkbox"] { accent-color:var(--verde-claro); width:13px; height:13px; cursor:pointer; flex-shrink:0; }
   .filter-item label { font-size:0.72rem; color:var(--texto-claro); cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  /* Items ocultos por cascada — se esconden completamente */
   .filter-item.cascada-off { display:none !important; }
-
   .kpis-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:13px; margin-bottom:4px; }
   .kpi-card { border-radius:12px; padding:16px 22px; text-align:center; box-shadow:0 6px 22px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.12); position:relative; overflow:hidden; }
   .kpi-card::before { content:''; position:absolute; top:-60%; left:-60%; width:220%; height:220%; background:radial-gradient(ellipse,rgba(255,255,255,0.08) 0%,transparent 65%); pointer-events:none; }
@@ -65,10 +58,51 @@
   .kpi-label { font-family:'Inter',sans-serif; font-size:0.74rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.92); margin-bottom:7px; }
   .kpi-value { font-family:'Inter',sans-serif; font-size:1.45rem; font-weight:700; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.4); word-break:break-all; }
   .cylinders-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
-  .cylinder-card { background:linear-gradient(160deg,#2c3e50 0%,#34495e 100%); border:1px solid #546e7a; border-radius:10px; padding:8px 5px 12px; box-shadow:0 4px 18px rgba(0,0,0,0.4); transition:all 0.2s; cursor:pointer; display:flex; flex-direction:column; align-items:center; }
+
+  /* Tarjeta cilindro — más alta para acomodar etiqueta Diferencia */
+  .cylinder-card {
+    background:linear-gradient(160deg,#2c3e50 0%,#34495e 100%);
+    border:1px solid #546e7a; border-radius:10px; padding:8px 5px 10px;
+    box-shadow:0 4px 18px rgba(0,0,0,0.4); transition:all 0.2s; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center;
+  }
   .cylinder-card:hover { border-color:var(--dorado); box-shadow:0 6px 26px rgba(241,196,15,0.3); transform:translateY(-2px); }
   .cylinder-title { font-family:'Inter',sans-serif; font-size:0.6rem; font-weight:600; letter-spacing:1.5px; color:var(--dorado); text-align:center; text-transform:uppercase; margin-bottom:5px; }
   .cyl-svg-wrap { width:100%; display:flex; justify-content:center; }
+
+  /* Etiqueta Diferencia debajo del cilindro */
+  .cyl-diferencia {
+    margin-top:8px;
+    width:100%;
+    text-align:center;
+    padding:4px 6px;
+    border-radius:6px;
+    background:rgba(0,0,0,0.25);
+    border:1px solid rgba(255,255,255,0.08);
+  }
+  .cyl-diferencia .dif-label {
+    font-family:'Inter',sans-serif;
+    font-size:0.56rem;
+    font-weight:600;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    color:#95a5a6;
+    display:block;
+    margin-bottom:2px;
+  }
+  .cyl-diferencia .dif-value {
+    font-family:'Inter',sans-serif;
+    font-size:0.75rem;
+    font-weight:700;
+    display:block;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .cyl-diferencia .dif-value.positivo { color:#2ecc71; text-shadow:0 0 8px rgba(46,204,113,0.5); }
+  .cyl-diferencia .dif-value.negativo { color:#e74c3c; text-shadow:0 0 8px rgba(231,76,60,0.5); }
+  .cyl-diferencia .dif-value.neutro   { color:#95a5a6; }
+
   .bar-tooltip { display:none; position:fixed; z-index:9999; background:linear-gradient(160deg,#1c2833,#2c3e50); border:2px solid var(--dorado); border-radius:12px; padding:12px 14px; box-shadow:0 10px 36px rgba(0,0,0,0.75); pointer-events:none; min-width:360px; max-width:480px; }
   .bar-tooltip.visible { display:block; }
   .tooltip-title { font-family:'Inter',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; color:var(--dorado); text-align:center; text-transform:uppercase; margin-bottom:10px; border-bottom:1px solid rgba(241,196,15,0.3); padding-bottom:7px; }
@@ -160,7 +194,10 @@
 <div id="page-dashboard" class="page active">
   <div class="dashboard-layout">
     <div class="filters-panel-left">
-      <button class="btn-excel" id="btn-excel-top" onclick="exportarExcel(this)">▶ Descargar Excel</button>
+      <div class="buttons-row">
+        <button class="btn-excel" id="btn-excel-top" onclick="exportarExcel(this)">📥 Descargar Excel</button>
+        <button class="btn-limpiar" onclick="limpiarFiltros()">🗑 Limpiar Filtros</button>
+      </div>
       <div class="filters-section">
 
         <div class="filter-group">
@@ -309,7 +346,7 @@
 <div id="page-detalle" class="page">
   <div class="detail-header">
     <div class="detail-title">📋 Detalle de Transacciones</div>
-    <button class="btn-excel" id="btn-excel-detalle" onclick="exportarExcel(this)">▶ Descargar Excel</button>
+    <button class="btn-excel" style="width:auto;padding:9px 20px;" id="btn-excel-detalle" onclick="exportarExcel(this)">📥 Descargar Excel</button>
   </div>
   <div class="table-wrapper">
     <div class="table-scroll-area">{{ tabla_html | safe }}</div>
@@ -322,14 +359,12 @@
 </div>
 
 <script>
-// ── Estado global ──
 const DATOS_MESES     = {{ datos_meses | tojson }};
 const DATOS_CHEQUERAS = {{ datos_chequeras_mes | tojson }};
 const MESES_ORDEN     = ['NOVIEMBRE','DICIEMBRE','ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE'];
 let datosResumenActuales = {{ datos_resumen | tojson }};
 let filtrosActuales = {};
 
-// Mapeo clave filtro → id contenedor
 const SEG_MAP = {
   'administracion':  'filter-administracion',
   'gerencia':        'filter-gerencia',
@@ -354,37 +389,45 @@ function formatCurrency(v){
   return 'Q'+(v||0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g,'$&,');
 }
 
-// ── FILTROS EN CASCADA: ocultar los que no corresponden ──
+// Formato compacto con signo explícito para diferencia
+function formatDif(v){
+  const a=Math.abs(v);
+  let s;
+  if(a>=1e9) s='Q'+(a/1e9).toFixed(1)+'B';
+  else if(a>=1e6) s='Q'+(a/1e6).toFixed(1)+'M';
+  else if(a>=1e3) s='Q'+(a/1e3).toFixed(1)+'K';
+  else s='Q'+a.toFixed(0);
+  return (v>=0?'+':'-')+s;
+}
+
+// ── CASCADA ──
 function actualizarCascada(segmentadores){
   if(!segmentadores) return;
-
-  // Verificar si hay algún filtro activo
-  const hayFiltrosActivos = Object.values(filtrosActuales).some(v => v && v.length > 0);
-
-  Object.entries(SEG_MAP).forEach(([col, containerId])=>{
-    const disponibles = segmentadores[col] || [];
-    const container   = document.getElementById(containerId);
+  const hayFiltros=Object.values(filtrosActuales).some(v=>v&&v.length>0);
+  Object.entries(SEG_MAP).forEach(([col,containerId])=>{
+    const disponibles=segmentadores[col]||[];
+    const container=document.getElementById(containerId);
     if(!container) return;
-
     container.querySelectorAll('.filter-item').forEach(item=>{
-      const val = item.getAttribute('data-val');
-      const cb  = item.querySelector('input[type=checkbox]');
-
-      if(!hayFiltrosActivos){
-        // Sin filtros activos: mostrar todo
+      const val=item.getAttribute('data-val');
+      const cb=item.querySelector('input[type=checkbox]');
+      if(!hayFiltros||disponibles.includes(val)){
         item.classList.remove('cascada-off');
-        if(cb) cb.disabled = false;
-      } else if(disponibles.includes(val)){
-        // Está disponible: mostrar
-        item.classList.remove('cascada-off');
-        if(cb) cb.disabled = false;
+        if(cb) cb.disabled=false;
       } else {
-        // No disponible: ocultar y desmarcar
         item.classList.add('cascada-off');
-        if(cb){ cb.checked = false; cb.disabled = true; }
+        if(cb){ cb.checked=false; cb.disabled=true; }
       }
     });
   });
+}
+
+// ── LIMPIAR FILTROS ──
+function limpiarFiltros(){
+  document.querySelectorAll('.filter-item input[type=checkbox]').forEach(cb=>{ cb.checked=false; cb.disabled=false; });
+  document.querySelectorAll('.filter-item').forEach(item=>item.classList.remove('cascada-off'));
+  filtrosActuales={};
+  aplicarFiltros();
 }
 
 // ── EXPORTAR EXCEL ──
@@ -392,53 +435,36 @@ async function exportarExcel(btn){
   btn.disabled=true; btn.textContent='⏳ Generando...';
   try {
     const wb=XLSX.utils.book_new();
-
-    // Hoja 1 — Detalle
     const tablaDOM=document.querySelector('.table-wrapper .table-scroll-area table');
     if(tablaDOM){
       const headers=Array.from(tablaDOM.querySelectorAll('thead th')).map(th=>th.textContent.trim());
       const filas=[];
       tablaDOM.querySelectorAll('tbody tr').forEach(tr=>{
-        const celdas=Array.from(tr.querySelectorAll('td')).map(td=>{
-          const t=td.textContent.trim(); const n=parseFloat(t.replace(/,/g,'')); return isNaN(n)?t:n;
-        });
+        const celdas=Array.from(tr.querySelectorAll('td')).map(td=>{ const t=td.textContent.trim(); const n=parseFloat(t.replace(/,/g,'')); return isNaN(n)?t:n; });
         if(celdas.length) filas.push(celdas);
       });
       const ws1=XLSX.utils.aoa_to_sheet([headers,...filas]);
       ws1['!cols']=headers.map(()=>({wch:20}));
       XLSX.utils.book_append_sheet(wb,ws1,'Detalle');
     }
-
-    // Hoja 2 — Resumen de Saldos
     const hRes=['Centro de Costo','Descripción','Chequera','Créditos','Débitos','Saldo'];
     const fRes=datosResumenActuales.map(r=>[r.centro_costo,r.desc_centro||'',r.chequera,r.creditos,r.debitos,r.creditos-r.debitos]);
-    const ws2=XLSX.utils.aoa_to_sheet([hRes,...fRes]);
-    ws2['!cols']=[20,28,22,14,14,14].map(w=>({wch:w}));
+    const ws2=XLSX.utils.aoa_to_sheet([hRes,...fRes]); ws2['!cols']=[20,28,22,14,14,14].map(w=>({wch:w}));
     XLSX.utils.book_append_sheet(wb,ws2,'Resumen de Saldos');
-
-    // Hoja 3 — KPIs por Mes
-    const hKpi=['Mes','Créditos','Débitos','Saldo'];
+    const hKpi=['Mes','Créditos','Débitos','Diferencia'];
     const fKpi=MESES_ORDEN.map(mes=>{ const d=DATOS_MESES[mes]||{creditos:0,debitos:0}; return [mes,d.creditos,d.debitos,d.creditos-d.debitos]; });
-    const ws3=XLSX.utils.aoa_to_sheet([hKpi,...fKpi]);
-    ws3['!cols']=[16,14,14,14].map(w=>({wch:w}));
+    const ws3=XLSX.utils.aoa_to_sheet([hKpi,...fKpi]); ws3['!cols']=[16,14,14,14].map(w=>({wch:w}));
     XLSX.utils.book_append_sheet(wb,ws3,'KPIs por Mes');
-
-    // Hoja 4 — Datos ERP Completo
     const respErp=await fetch('/api/exportar-datos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(filtrosActuales)});
     const dataErp=await respErp.json();
     if(dataErp.columnas&&dataErp.columnas.length>0){
-      const ws4=XLSX.utils.aoa_to_sheet([dataErp.columnas,...dataErp.filas]);
-      ws4['!cols']=dataErp.columnas.map(()=>({wch:18}));
+      const ws4=XLSX.utils.aoa_to_sheet([dataErp.columnas,...dataErp.filas]); ws4['!cols']=dataErp.columnas.map(()=>({wch:18}));
       XLSX.utils.book_append_sheet(wb,ws4,'Datos ERP Completo');
     }
-
     const fecha=new Date().toISOString().slice(0,10).replace(/-/g,'');
     XLSX.writeFile(wb,`reporte_IPG_${fecha}.xlsx`);
-  } catch(err){
-    console.error('Error Excel:',err); alert('Error al generar el Excel. Intente de nuevo.');
-  } finally {
-    btn.disabled=false; btn.textContent='▶ Descargar Excel';
-  }
+  } catch(err){ console.error('Error Excel:',err); alert('Error al generar el Excel.'); }
+  finally { btn.disabled=false; btn.textContent='📥 Descargar Excel'; }
 }
 
 // ── CILINDRO SVG ──
@@ -491,13 +517,24 @@ function mostrarTooltipBarras(mes,e){
 function moverTooltip(e){ posTooltip(e); }
 function ocultarTooltip(){ hideTimeout=setTimeout(()=>tooltipEl.classList.remove('visible'),130); }
 
-// ── RENDER CILINDROS ──
+// ── RENDER CILINDROS (con etiqueta Diferencia) ──
 function renderCilindros(dm){
   const c=document.getElementById('cylinders-container'); c.innerHTML='';
   MESES_ORDEN.forEach(mes=>{
     const d=dm[mes]||{creditos:0,debitos:0};
-    const card=document.createElement('div'); card.className='cylinder-card';
-    card.innerHTML=`<div class="cylinder-title">${mes}</div><div class="cyl-svg-wrap">${buildCylinderSVG(d.creditos,d.debitos)}</div>`;
+    const diferencia=d.creditos-d.debitos;
+    const difCls=diferencia>0?'positivo':(diferencia<0?'negativo':'neutro');
+    const difTxt=diferencia===0?'Q0':formatDif(diferencia);
+
+    const card=document.createElement('div');
+    card.className='cylinder-card';
+    card.innerHTML=`
+      <div class="cylinder-title">${mes}</div>
+      <div class="cyl-svg-wrap">${buildCylinderSVG(d.creditos,d.debitos)}</div>
+      <div class="cyl-diferencia">
+        <span class="dif-label">Diferencia</span>
+        <span class="dif-value ${difCls}">${difTxt}</span>
+      </div>`;
     c.appendChild(card);
     card.addEventListener('mouseenter',e=>mostrarTooltipBarras(mes,e));
     card.addEventListener('mousemove',e=>moverTooltip(e));
@@ -524,8 +561,7 @@ function renderResumen(datos){
   });
   document.getElementById('total-creditos').textContent=formatCurrency(tC);
   document.getElementById('total-debitos').textContent=formatCurrency(tD);
-  const sEl=document.getElementById('total-saldo');
-  sEl.textContent=formatCurrency(tC-tD); sEl.style.color=(tC-tD)>=0?'#81c784':'#e57373';
+  const sEl=document.getElementById('total-saldo'); sEl.textContent=formatCurrency(tC-tD); sEl.style.color=(tC-tD)>=0?'#81c784':'#e57373';
 }
 
 // ── TABS ──
@@ -537,16 +573,14 @@ function switchTab(p,el){
   if(p==='resumen')   renderResumen(datosResumenActuales);
 }
 
-// ── OBTENER CHECKED (solo items visibles y habilitados) ──
+// ── CHECKED ──
 function getChecked(id){
-  return Array.from(document.querySelectorAll(`#${id} .filter-item:not(.cascada-off) input[type=checkbox]:checked`))
-    .map(b=>b.value);
+  return Array.from(document.querySelectorAll(`#${id} .filter-item:not(.cascada-off) input[type=checkbox]:checked`)).map(b=>b.value);
 }
 
 // ── APLICAR FILTROS ──
 function aplicarFiltros(){
-  // Recolectar valores marcados
-  filtrosActuales = {
+  filtrosActuales={
     administracion:  getChecked('filter-administracion'),
     gerencia:        getChecked('filter-gerencia'),
     responsable:     getChecked('filter-responsable'),
@@ -556,31 +590,19 @@ function aplicarFiltros(){
     cod_admin:       getChecked('filter-cod-admin'),
     cod_centro:      getChecked('filter-cod-centro'),
   };
-
-  fetch('/api/filtrar',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(filtrosActuales)
-  })
+  fetch('/api/filtrar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(filtrosActuales)})
   .then(r=>r.json())
   .then(data=>{
-    // KPIs
-    document.getElementById('kpi-creditos').textContent    = data.kpis.total_creditos;
-    document.getElementById('kpi-debitos').textContent     = data.kpis.total_debitos;
-    document.getElementById('kpi-neto').textContent        = data.kpis.saldo_neto;
-    document.getElementById('footer-creditos').textContent = data.kpis.total_creditos;
-    document.getElementById('footer-debitos').textContent  = data.kpis.total_debitos;
-    document.getElementById('footer-neto').textContent     = data.kpis.saldo_neto;
-
-    // Sync datos globales
+    document.getElementById('kpi-creditos').textContent    =data.kpis.total_creditos;
+    document.getElementById('kpi-debitos').textContent     =data.kpis.total_debitos;
+    document.getElementById('kpi-neto').textContent        =data.kpis.saldo_neto;
+    document.getElementById('footer-creditos').textContent =data.kpis.total_creditos;
+    document.getElementById('footer-debitos').textContent  =data.kpis.total_debitos;
+    document.getElementById('footer-neto').textContent     =data.kpis.saldo_neto;
     if(data.datos_chequeras_mes){ Object.keys(DATOS_CHEQUERAS).forEach(k=>delete DATOS_CHEQUERAS[k]); Object.assign(DATOS_CHEQUERAS,data.datos_chequeras_mes); }
     if(data.datos_meses){ Object.keys(DATOS_MESES).forEach(k=>delete DATOS_MESES[k]); Object.assign(DATOS_MESES,data.datos_meses); }
     if(data.datos_resumen) datosResumenActuales=data.datos_resumen;
-
-    // Cascada: ocultar/mostrar items según disponibles
     if(data.segmentadores) actualizarCascada(data.segmentadores);
-
-    // Renderizar
     renderCilindros(data.datos_meses);
     if(document.getElementById('page-resumen').classList.contains('active')) renderResumen(datosResumenActuales);
     document.querySelector('.table-wrapper .table-scroll-area').innerHTML=data.tabla_html;
@@ -589,7 +611,7 @@ function aplicarFiltros(){
   .catch(e=>console.error('Error filtros:',e));
 }
 
-// ── FIX TABLA DETALLE ──
+// ── FIX TABLA ──
 function fixDetalleTable(){
   const sa=document.querySelector('.table-wrapper .table-scroll-area'); if(!sa) return;
   const tbl=sa.querySelector('table'); if(!tbl) return;
