@@ -37,14 +37,12 @@ def cargar_datos():
 def cargar_datos_erp():
     try:
         ruta = os.path.join(BASE_DIR, 'data', 'datos_presupuesto_erp.json')
-        with open(ruta, 'r', encoding='latin-1') as f:
-            contenido = f.read()
-        # Limpiar caracteres de control inválidos para JSON
-        contenido_limpio = ''.join(
-            c if ord(c) >= 32 or c in '\n\r\t' else ' '
-            for c in contenido
-        )
-        raw = json.loads(contenido_limpio)
+        with open(ruta, 'rb') as f:
+            contenido_bytes = f.read()
+        # Limpiar caracteres de control invalidos
+        contenido_limpio = bytes(b if b >= 32 or b in (9, 10, 13) else 32 for b in contenido_bytes)
+        contenido_str = contenido_limpio.decode('latin-1')
+        raw = json.loads(contenido_str)
         if isinstance(raw, list):
             registros = raw
         elif isinstance(raw, dict):
@@ -99,11 +97,42 @@ def obtener_datos_usuario(correo):
 
 
 def obtener_datos_erp_usuario(correo):
-    df, _ = obtener_datos_usuario(correo)
-    if df.empty:
+    """Retorna datos ERP filtrados por CCUs del usuario. Usa ERP si está disponible, si no usa datos_presupuesto."""
+    df_base, _ = obtener_datos_usuario(correo)
+    if df_base.empty:
         return pd.DataFrame()
-    if 'USUARIO' in df.columns:
-        df = df.drop(columns=['USUARIO'])
+    df_erp = cargar_datos_erp()
+    if df_erp.empty:
+        # Fallback: usar datos_presupuesto sin columna USUARIO
+        if 'USUARIO' in df_base.columns:
+            df_base = df_base.drop(columns=['USUARIO'])
+        return df_base
+    # Filtrar ERP por los CCUs permitidos del usuario
+    if 'CENTRO_COSTO' in df_erp.columns:
+        ccus = df_base['CENTRO_COSTO'].unique().tolist()
+        df_erp['CENTRO_COSTO'] = df_erp['CENTRO_COSTO'].astype(str).str.strip()
+        df_erp = df_erp[df_erp['CENTRO_COSTO'].isin(ccus)]
+    return df_erp
+
+
+def aplicar_filtros_df(df, filtros):
+    """Aplica los filtros del dashboard a cualquier DataFrame."""
+    df = df.copy()
+    df.columns = df.columns.str.strip().str.upper()
+    mapa = {
+        'administracion':  'DES_ADMINSTRACION',
+        'gerencia':        'DES_GERENCIA',
+        'responsable':     'DES_RESPONSABLE',
+        'centro_costo':    'CENTRO_COSTO',
+        'chequera':        'NOMBRE_CHEQUERA',
+        'cod_responsable': 'GERENCIA',
+        'cod_admin':       'ADMINISTRACION',
+        'cod_centro':      'RESPONSABLE',
+    }
+    for key, col in mapa.items():
+        valores = filtros.get(key, [])
+        if valores and col in df.columns:
+            df = df[df[col].astype(str).str.strip().isin(valores)]
     return df
 
 
@@ -272,25 +301,28 @@ def obtener_segmentadores(df):
     }
 
 
-def aplicar_filtros_df(df, filtros):
-    """Aplica los filtros del dashboard a cualquier DataFrame que tenga las mismas columnas."""
+def obtener_segmentadores_cascada(df):
+    """Valores disponibles por columna para filtro en cascada del frontend."""
+    if df.empty:
+        return {}
     df = df.copy()
     df.columns = df.columns.str.strip().str.upper()
-    mapa = {
-        'administracion':  'DES_ADMINSTRACION',
-        'gerencia':        'DES_GERENCIA',
-        'responsable':     'DES_RESPONSABLE',
-        'centro_costo':    'CENTRO_COSTO',
-        'chequera':        'NOMBRE_CHEQUERA',
-        'cod_responsable': 'GERENCIA',
-        'cod_admin':       'ADMINISTRACION',
-        'cod_centro':      'RESPONSABLE',
+    def uniq(col):
+        if col in df.columns:
+            vals = df[col].dropna().astype(str).str.strip()
+            vals = vals[vals.str.lower() != 'nan']
+            return sorted(vals.unique().tolist())
+        return []
+    return {
+        'administracion':  uniq('DES_ADMINSTRACION'),
+        'gerencia':        uniq('DES_GERENCIA'),
+        'centro_costo':    uniq('CENTRO_COSTO'),
+        'responsable':     uniq('DES_RESPONSABLE'),
+        'chequera':        uniq('NOMBRE_CHEQUERA'),
+        'cod_admin':       uniq('ADMINISTRACION'),
+        'cod_responsable': uniq('GERENCIA'),
+        'cod_centro':      uniq('RESPONSABLE'),
     }
-    for key, col in mapa.items():
-        valores = filtros.get(key, [])
-        if valores and col in df.columns:
-            df = df[df[col].astype(str).str.strip().isin(valores)]
-    return df
 
 
 @app.route('/')
@@ -306,28 +338,21 @@ def login():
     if request.method == 'POST':
         email    = request.form['email'].lower().strip()
         password = request.form['password'].strip()
-
         df_usuarios = cargar_usuarios_login()
-
         if df_usuarios.empty:
             error = 'Error interno. Contacte al administrador.'
             return render_template('login.html', error=error)
-
         fila = df_usuarios[df_usuarios['USUARIO'] == email]
-
         if fila.empty:
             error = 'Correo no encontrado'
             return render_template('login.html', error=error)
-
         password_correcto = str(fila.iloc[0]['PASSWORD']).strip()
         if password != password_correcto:
             error = 'Contrasena incorrecta'
             return render_template('login.html', error=error)
-
         session['usuario'] = email
         session['nombre']  = str(fila.iloc[0]['NAME_USUARIO']).strip()
         return redirect(url_for('dashboard'))
-
     return render_template('login.html', error=error)
 
 
@@ -366,25 +391,25 @@ def api_filtrar():
             'kpis': {'total_creditos':'Q0.00','total_debitos':'Q0.00','saldo_neto':'Q0.00'},
             'datos_meses': {m:{'creditos':0,'debitos':0} for m in MESES_ORDEN},
             'datos_chequeras_mes': {m:{} for m in MESES_ORDEN},
-            'datos_resumen': [],
-            'tabla_html': ''
+            'datos_resumen': [], 'tabla_html': '', 'segmentadores': {}
         })
-
     df = aplicar_filtros_df(df, filtros)
-
     kpis, datos_meses, tabla_html = calcular_resumen(df)
+    # Segmentadores disponibles con filtros aplicados (para cascada en frontend)
+    segmentadores = obtener_segmentadores_cascada(df)
     return jsonify({
-        'kpis':               kpis,
-        'datos_meses':        datos_meses,
+        'kpis':                kpis,
+        'datos_meses':         datos_meses,
         'datos_chequeras_mes': calcular_chequeras_por_mes(df),
-        'datos_resumen':      calcular_resumen_saldos(df),
-        'tabla_html':         tabla_html
+        'datos_resumen':       calcular_resumen_saldos(df),
+        'tabla_html':          tabla_html,
+        'segmentadores':       segmentadores
     })
 
 
 @app.route('/api/exportar-datos', methods=['POST'])
 def api_exportar_datos():
-    """Retorna los datos ERP filtrados en formato JSON para que el frontend genere el Excel."""
+    """Retorna los datos ERP filtrados en JSON para que el frontend genere el Excel."""
     if 'usuario' not in session:
         return jsonify({'error': 'no autenticado'}), 401
     filtros = request.get_json() or {}
@@ -393,11 +418,8 @@ def api_exportar_datos():
         df_erp = aplicar_filtros_df(df_erp, filtros)
     if df_erp.empty:
         return jsonify({'columnas': [], 'filas': []})
-    # Convertir NaN a None para JSON limpio
     df_erp = df_erp.where(pd.notnull(df_erp), None)
-    columnas = df_erp.columns.tolist()
-    filas = df_erp.values.tolist()
-    return jsonify({'columnas': columnas, 'filas': filas})
+    return jsonify({'columnas': df_erp.columns.tolist(), 'filas': df_erp.values.tolist()})
 
 
 @app.route('/logout')
@@ -407,4 +429,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 10000))
+    app.run(debug=False, host='0.0.0.0', port=port)
